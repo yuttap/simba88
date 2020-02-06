@@ -1,0 +1,322 @@
+<h2 class="page-title">
+    หน้าหลัก
+</h2>
+<div class="row">
+    <article class="col-sm-7 col-md-7 col-lg-7">
+        <div class="row" style="margin-bottom: 10px;">
+            <!-- NEW COL START -->
+            <div class="col-sm-12 col-md-12 col-lg-12 main-header">
+                <div class="row">
+                    <div class="col-lg-12 main">
+                        <header>
+                            ธนาคาร
+                        </header>
+                    </div>
+                </div>
+
+                <div class="row sub" style="display: flex; justify-content: center;">
+                    <table width="90%">
+                        <thead>
+                        <th>No</th>
+                        <th></th>
+                        <th>Bank</th>
+                        <th>Account</th>
+                        <th>Amount</th>
+                        <th>DateTime</th>
+                    </thead>
+                    <tbody ng-init="total = 0;">
+                        <tr *ngFor="let item of banks; let i = index" style="border-top: 1px solid rgb(78, 75, 75); padding: 5px 0; height: 60px;">
+                            <td>{{i+1}}</td>
+                            <td>
+                                    <img *ngIf="item.bankName == 'KBANK'" src="assets/img/banks/kbank.png" width="35px">
+                                    <img *ngIf="item.bankName == 'SCB'" src="assets/img/banks/scb.png" width="35px">
+                                    <img *ngIf="item.bankName == 'BAY'" src="assets/img/banks/bay.png" width="35px">
+                                    <img *ngIf="item.bankName == 'TRUEMONEY'" src="assets/img/banks/wallet.png" width="35px">
+                            </td>
+                            <td>{{item.bankName}}</td>
+                            <td>{{item.accountName}}</td>
+                            <td>{{item.amount | number: '1.2-2'}}</td>
+                            <td>{{item.updateDate}}</td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td >Total</td>
+                            <td>{{total | number: '1.2-2'}}</td>
+                        </tr>
+                    </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="row" style="margin-bottom: 10px;" *ngIf="position === 'SUPER_ADMIN'">
+            <div class="col-sm-12 col-md-12 col-lg-12 main-header">
+                <div class="row">
+                    <div class="col-lg-12 main">
+                        <header>
+                            รายการเติมเงินค้าง
+                        </header>
+                    </div>
+                </div>
+                <div class="row" style="padding: 20px">
+                    <section>
+                        <button class="btn btn-default btn-block" (click)="pendingTran()"><i class="fa fa-clock-o"></i> เติมทุกรายการ</button>
+                    </section>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-12 col-md-12 col-lg-12 main-header">
+                <div class="row">
+                    <div class="col-lg-12 main">
+                        <header>
+                            รายการใหม่
+                        </header>
+                    </div>
+                </div>
+
+                <div class="row sub" style="padding: 10px;">
+                    <table class="table table-striped" *ngFor="let i of result">
+                        <tbody>
+                        <tr style="color: #fff; border: solid 5px #c1c1c1; height: 70px; background-color: #00a950;"
+                            *ngIf="i.bankName == 'KBANK'">
+                            <td style="width: 55px;">
+                                <img src="assets/img/banks/kbank.png" width="35px">
+                            </td>
+                            <td style="width: 430px;">{{i.detail}} {{i.typeTransfer}} {{i.accountTransfer}}
+                                <br>
+                                <small><i class="fa fa-clock-o"></i> รับรายการมาแล้ว {{i.lminute}} นาที
+                                </small>
+                                <br>
+                                <b>{{i.botName}}</b> - <b>{{i.username}}</b>
+                                <br>
+                                <span *ngIf="i.isFail" style="color: red; font-weight: bold;"> {{i.remarkBot}}</span>
+                            </td>
+                            <td>
+                                <small>ช่องทาง</small>
+                                <br/> {{i.channelTransfer}}
+                            </td>
+                            <td>
+                                <small>เวลา</small>
+                                <br/> {{i.dateBank}}
+                            </td>
+                            <td>
+                                <small>จำนวนเงิน</small>
+                                <br/>
+                                <span class="badge-default badge" style="color: #000;">{{i.value | number: '1.2-2'}}</span>
+                            </td>
+                            <td class="text-right" *ngIf="!i.isFail">
+                                <button class="btn btn-default btn-block" (click)="openModal(i)"><i class="fa fa-check"></i> เติม</button>
+                                <div style="padding: 2px;"></div>
+                                <button class="btn btn-primary btn-block" (click)="delete(i)"><i class="fa fa-times"></i> ซ่อน</button>
+                            </td>
+                            <td class="text-center" *ngIf="i.isFail">
+                                <button class="btn btn-danger btn-block" (click)="reset(i)">รีเซต</button>
+                                <div style="padding: 2px;"></div>
+                                <button class="btn btn-warning btn-block" (click)="changeStatusTopup(i)">ปรับสถานะ</button>
+                            </td>
+                        </tr>
+                        <tr style="color: #fff; border: solid 5px #c1c1c1; height: 70px; background-color: rgb(73, 41, 126);"
+                            *ngIf="i.bankName == 'SCB'">
+                            <td style="width: 55px;">
+                                <img src="assets/img/banks/scb.png" width="35px">
+                            </td>
+                            <td style="width: 430px;">{{i.detail}}
+                                <br>
+                                <small><i class="fa fa-clock-o"></i> รับรายการมาแล้ว {{i.lminute}} นาที
+                                </small>
+                                <br>
+                                <b>{{i.botName}}</b> - <b>{{i.username}}</b>
+                                <br>
+                                <span *ngIf="i.isFail" style="color: red; font-weight: bold;"> {{i.remarkBot}}</span>
+                            </td>
+                            <td>
+                                <small>ช่องทาง</small>
+                                <br/> {{i.channelTransfer}}
+                            </td>
+                            <td>
+                                <small>เวลา</small>
+                                <br/> {{i.dateBank}}
+                            </td>
+                            <td>
+                                <small>จำนวนเงิน</small>
+                                <br/>
+                                <span class="badge-default badge" style="color: #000;">{{i.value | number: '1.2-2'}}</span>
+                            </td>
+                            <td class="text-right" *ngIf="!i.isFail">
+                                <button class="btn btn-default btn-block" (click)="openModal(i)"><i class="fa fa-check"></i> เติม</button>
+                                <div style="padding: 2px;"></div>
+                                <button class="btn btn-primary btn-block" (click)="delete(i)"><i class="fa fa-times"></i> ซ่อน</button>
+                            </td>
+                            <td class="text-center" *ngIf="i.isFail">
+                                <button class="btn btn-danger btn-block" (click)="reset(i)">รีเซต</button>
+                                <div style="padding: 2px;"></div>
+                                <button class="btn btn-warning btn-block" (click)="changeStatusTopup(i)">ปรับสถานะ</button>
+                            </td>
+                        </tr>
+                        <tr style="color: #fff; border: solid 5px #c1c1c1; height: 70px; background-color: rgb(205,200,81);"
+                            *ngIf="i.bankName == 'BAY'">
+                            <td style="width: 55px;">
+                                <img src="assets/img/banks/bay.png" width="35px">
+                            </td>
+                            <td style="width: 430px;">{{i.detail}}
+                                <br>
+                                <small><i class="fa fa-clock-o"></i> รับรายการมาแล้ว {{i.lminute}} นาที
+                                </small>
+                                <br>
+                                <b>{{i.botName}}</b> - <b>{{i.username}}</b>
+                                <br>
+                                <span *ngIf="i.isFail" style="color: red; font-weight: bold;"> {{i.remarkBot}}</span>
+                            </td>
+                            <td>
+                                <small>ช่องทาง</small>
+                                <br/> {{i.channelTransfer}}
+                            </td>
+                            <td>
+                                <small>เวลา</small>
+                                <br/> {{i.dateBank}}
+                            </td>
+                            <td>
+                                <small>จำนวนเงิน</small>
+                                <br/>
+                                <span class="badge-default badge" style="color: #000;">{{i.value | number: '1.2-2'}}</span>
+                            </td>
+                            <td class="text-right" *ngIf="!i.isFail">
+                                <button class="btn btn-default btn-block" (click)="openModal(i)"><i class="fa fa-check"></i> เติม</button>
+                                <div style="padding: 2px;"></div>
+                                <button class="btn btn-primary btn-block" (click)="delete(i)"><i class="fa fa-times"></i> ซ่อน</button>
+                            </td>
+                            <td class="text-center" *ngIf="i.isFail">
+                                <button class="btn btn-danger btn-block" (click)="reset(i)">รีเซต</button>
+                                <div style="padding: 2px;"></div>
+                                <button class="btn btn-warning btn-block" (click)="changeStatusTopup(i)">ปรับสถานะ</button>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </article>
+
+    <article class="col-sm-5 col-md-5 col-lg-5 no-padding">
+        <div class="row" style="margin-left: 10px;">
+            <div class="col-sm-12 col-md-12 col-lg-12  main-header">
+
+                <div class="row">
+                    <div class="col-lg-12 main">
+                        <header>
+                            รายการล่าสุด
+                        </header>
+                    </div>
+                </div>
+
+                <div class="row sub">
+                    <div class="col-md-12 col-sm-12 col-lg-12"  *ngFor="let t of trans">
+                        <div class="row">
+                            <div class="col-md-2 col-sm-2 col-lg-2" style="display: flex; justify-content: center; align-items: center">
+                                <img *ngIf="t.bankName == 'BBL'" src="assets/img/banks/bbl.png" width="100%">
+                                <img *ngIf="t.bankName == 'KBANK'" src="assets/img/banks/kbank.png" width="100%">
+                                <img *ngIf="t.bankName == 'SCB'" src="assets/img/banks/scb.png" width="100%">
+                                <img *ngIf="t.bankName == 'BAY'" src="assets/img/banks/bay.png" width="100%">
+                                <img *ngIf="t.bankName == 'TRUEMONEY'" src="assets/img/banks/wallet.png" width="100%">
+                                <img *ngIf="t.bankName !== 'BBL' && t.bankName !== 'KBANK' && t.bankName !== 'SCB' && t.bankName !== 'TRUEMONEY' && t.bankName !== 'BAY' " src="assets/img/banks/other.png" width="100%">
+                            </div>
+                            <div class="col-md-ต col-sm-10 col-lg-10">
+                                <div class="row">
+                                    <div class="col-md-6 col-sm-6 col-lg-6">
+                                        <span style="font-weight: bold; font-size: 18px" class="pull-left">{{t.channelTransfer}}</span>
+                                    </div>
+                                    <div class="col-md-6 col-sm-6 col-lg-6">
+                                        <span class="pull-right"> {{t.dateBank}} </span>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12 col-sm-12 col-lg-12">
+                                        <p>{{t.detail}} {{t.walletTran}} <br/>
+                                            <span class="badge-default badge" style="color: #000;">{{t.username}} ฝาก {{t.value | number: '1.2-2'}} โบนัส {{t.bonus | number:'1.2-2'}} บาท </span>
+                                            <span class="badge" [ngStyle]="t.remark && t.remark.includes('Auto') ? {'background': '#1ab394'} : ''" *ngIf="t.remark && t.remark.includes('Auto')">
+                                            {{t.remark}}
+                                        </span>
+                                            <span class="badge" [ngStyle]="t.actionBy ? {'background': '#ed5565'} : ''" *ngIf="t.actionBy">
+                                            Manual by {{t.actionBy}}
+                                        </span>
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12 col-sm-12 col-lg-12">
+                                        <p>
+                                            เครดิตก่อนเติม : <strong>{{t.previousDownlineGiven | number: '1.2-2'}} </strong>
+                                            <br/>
+                                            เครดิตหลังเติม : <strong>{{t.currentDownlineGiven | number: '1.2-2'}} </strong>
+                                            <br/>
+                                            เวลาเติมสำเร็จ : <strong>{{t.updateDate | date:"dd/MM/yyyy HH:mm:ss"}} </strong>
+                                        </p>
+                                    </div>
+                                    <div class="col-md-12 col-sm-12 col-lg-12">
+                                        <b>{{t.botName}}</b>
+                                        <hr>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </article>
+</div>
+<div id="topupModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h4 class="modal-title" id="myModalLabel2">เติมเงิน</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-sm-12 col-md-12 col-lg-12">
+                        <form id="login-form" class="smart-form">
+
+                            <fieldset>
+                                <section>
+                                    <div class="form-group row">
+                                        <label class="col-md-3 col-form-label">รหัสล็อกอินผู้ใช้</label>
+                                        <div class="col-sm-9 col-md-9 col-lg-9">
+                                            <!--<input type="text" name="user" [(ngModel)]="payment.user" [disabled]="!payment.isEditable" class="form-control">-->
+                                            <input type="text" name="user" [(ngModel)]="payment.user" class="form-control">
+                                        </div>
+                                    </div>
+                                </section>
+
+                                <section>
+
+                                    <div class="form-group row">
+
+                                        <label class="col-md-3 col-form-label">จำนวนเงินฝาก</label>
+                                        <div class="col-sm-9 col-md-9 col-lg-9">
+                                            <input type="number" name="value" readonly disabled [(ngModel)]="payment.value" class="form-control">
+                                        </div>
+                                    </div>
+                                </section>
+
+                            </fieldset>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-success " [disabled]="isClick" (click)="topup(payment)" >บันทึก</button>
+                <button type="button" class="btn btn-danger" data-dismiss="modal">ยกเลิก</button>
+            </div>
+
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>

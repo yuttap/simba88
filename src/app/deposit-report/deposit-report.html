@@ -1,0 +1,304 @@
+<div class="row">
+    <div class="col-md-8">
+        <h2>รายงานการฝากเงิน</h2>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-sm-12 col-md-12 col-lg-12">
+        <section widget class="widget">
+            <div class="widget-body">
+
+                <table class="table table-striped static-table">
+                    <thead style="background: slategray">
+                    <tr>
+                        <th class="text-center">Auto Transaction</th>
+                        <th class="text-center">Manual Transaction</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td class="text-center align-middle">
+                            {{typeTransaction && typeTransaction.isAuto}}
+                        </td>
+                        <td class="text-center align-middle">
+                            {{typeTransaction && typeTransaction.isNotAuto}}
+                        </td>
+                    </tr>
+                    </tbody>
+
+                </table>
+            </div>
+        </section>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-sm-12 col-md-12 col-lg-12">
+        <section widget class="widget">
+            <div class="widget-body">
+
+                <table class="table table-striped static-table">
+                    <thead style="background: slategray">
+                    <tr>
+                        <th class="text-center">#</th>
+                        <th class="text-center">ธนาคาร</th>
+                        <th class="text-center">จำนวนรายการ</th>
+                        <th class="text-center">ยอดรวมเงินฝาก</th>
+                        <th class="text-center">ยอดรวมโบนัส</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr *ngIf="summary.length === 0">
+                        <td class="text-center align-middle" colspan="10">
+                            ยังไม่มีการฝากเงิน
+                        </td>
+                    </tr>
+                    <tr *ngFor="let t of summary; let i = index">
+                        <td class="text-center align-middle">
+                            {{i+1}}
+                        </td>
+                        <td class="text-center align-middle">
+                           ({{t._id.bankNo}})
+                            <img src="assets/img/banks/kbank.png" alt="" *ngIf="t._id.bankName === 'KBANK'"
+                                 style="width: 20px">
+                            <img src="assets/img/banks/scb.png" alt="" *ngIf="t._id.bankName === 'SCB'"
+                                 style="width: 20px">
+                            <img src="assets/img/banks/bay.png" alt="" *ngIf="t._id.bankName === 'BAY'"
+                                 style="width: 20px">
+                            <br>
+                        </td>
+                        <td class="text-center align-middle">
+                            {{t.count}}
+                        </td>
+                        <td class="text-center align-middle">
+                            {{t.summary | number: '1.2-2'}}
+                        </td>
+                        <td class="text-center align-middle">
+                            {{t.summaryBonus | number: '1.2-2'}}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td style="text-align: center;font-weight: bold">Total</td>
+                        <td style="text-align: center;">{{summaryTrans | number}}</td>
+                        <td style="text-align: center;">{{summaryTotal | number: '1.2-2'}}</td>
+                        <td style="text-align: center;">{{summaryBonus | number: '1.2-2'}}</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-sm-12 col-md-12 col-lg-12">
+        <section widget class="widget">
+            <div class="widget-body">
+
+                <table class="table table-striped static-table">
+                    <thead style="background: slategray">
+                    <tr>
+                        <th class="text-center">จำนวนสมาชิก</th>
+                        <th class="text-center">รับโบนัส</th>
+                        <th class="text-center">ไม่รับโบนัส</th>
+                        <th class="text-center">other</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td class="text-center align-middle">
+                            {{resultBonus.total}}
+                        </td>
+                        <td class="text-center align-middle">
+                            {{resultBonus.isBonusUser}}
+                        </td>
+                        <td class="text-center align-middle">
+                            {{resultBonus.isNoBonusUser}}
+                        </td>
+                        <td class="text-center align-middle">
+                            {{resultBonus.isUser}}
+                        </td>
+                    </tr>
+                    </tbody>
+
+                </table>
+            </div>
+        </section>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-sm-12 col-md-12 col-lg-12">
+        <section widget class="widget">
+            <header>
+                <h5>ค้นหา</h5>
+            </header>
+            <div class="widget-body">
+                <form id="order-form" class="smart-form" novalidate="novalidate">
+                    <fieldset>
+                        <div class="row">
+                            <section class="col col-2">
+                                <label class="input">
+                                    <datetime class="form-line" [timepicker]="false" [datepicker]="datepickerOpts"
+                                              [(ngModel)]="startDate" name="startDate" id="startDate"></datetime>
+                                </label>
+                            </section>
+                            <section class="col col-2">
+                                <label class="input">
+                                    <datetime class="form-line" [timepicker]="false" [datepicker]="datepickerOpts"
+                                              [(ngModel)]="endDate" name="endDate" id="endDate"></datetime>
+                                </label>
+                            </section>
+                            <section class="col col-2">
+                            <div class="row" >
+                                <span>Agent &nbsp;</span>
+                                <select id="agentType" name="agentType" [(ngModel)]="agentType" style="width: 70%">
+                                    <option value="0" selected="selected">All</option>
+                                    <option value="{{ag.index}}" *ngFor="let ag of agType">{{ag.agent}}</option>
+                                </select>
+                            </div>
+                            </section>
+                            <section class="col col-2">
+                                <div class="row" >
+                                    <span>Transaction Type &nbsp;</span>
+                                    <select (change)="autoChange($event)">
+                                        <option value="{{auto}}" *ngFor="let auto of optAuto">{{auto}}</option>
+                                    </select>
+                                </div>
+                            </section>
+                            <section class="col col-2">
+                                <div class="input-group input-group-transparent">
+                                    <span class="input-group-addon"><i class="fa fa-user"></i></span>
+                                    <input id="prepended-input" class="form-control input-transparent"
+                                           [ngModelOptions]="{standalone: true}" [(ngModel)]="username" type="text"
+                                           placeholder="ข้อมูลต่างๆ">
+                                </div>
+                            </section>
+                            <section class="col col-3">
+                                <a style="padding: 5px" class="btn btn-primary" (click)="onLoad()">ค้นหา</a>
+                                <a style="padding: 5px" class="btn btn-warning" (click)="yesterday()">เมื่อวาน</a>
+                                <a style="padding: 5px" class="btn btn-success" (click)="today()">วันนี้</a>
+                            </section>
+                        </div>
+                    </fieldset>
+                </form>
+            </div>
+        </section>
+
+    </div>
+</div>
+<div class="row">
+    <div class="col-sm-12 col-md-12 col-lg-12">
+        <section widget class="widget">
+            <div class="widget-body">
+
+                <table class="table table-striped static-table">
+                    <thead style="background: slategray">
+                    <tr>
+                        <th class="text-center">#</th>
+                        <th class="text-center">ธนาคาร</th>
+                        <th class="text-center">ชื่อธนาคาร</th>
+                        <th class="text-center">บัญชีชุดที่</th>
+                        <th class="text-center">ยูสเซอร์</th>
+                        <th class="text-center">เวลาธนาคาร</th>
+                        <th class="text-center">เวลาเติม</th>
+                        <th class="text-center">ฝาก</th>
+                        <th class="text-center">โบนัส</th>
+                        <th class="text-center">เครดิตก่อนเติม</th>
+                        <th class="text-center">เติม</th>
+                        <th class="text-center">ยอดหลังเติม</th>
+                        <th class="text-center">ทำโดย</th>
+                        <th class="text-center">หมายเหตุ</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr *ngIf="reports.length === 0">
+                        <td class="text-center align-middle" colspan="13">
+                            ยังไม่มีการฝากเงิน
+                        </td>
+                    </tr>
+                    <tr *ngFor="let t of reports | paginate: paginationConfig; let i = index">
+                        <td class="text-center align-middle">
+                            {{t.transactionId}}
+                        </td>
+                        <td class="text-center align-middle">
+
+                            <img src="assets/img/banks/kbank.png" alt="" *ngIf="t.bankName === 'KBANK'"
+                                 style="width: 20px">
+                            <img src="assets/img/banks/scb.png" alt="" *ngIf="t.bankName === 'SCB'"
+                                 style="width: 20px">
+                            <img src="assets/img/banks/bbl.png" alt="" *ngIf="t.bankName === 'BBL'"
+                                 style="width: 20px">
+                            <img src="assets/img/banks/tmb.png" alt="" *ngIf="t.bankName === 'TMB'"
+                                 style="width: 30px">
+                            <img src="assets/img/banks/bay.png" alt="" *ngIf="t.bankName === 'BAY'"
+                                 style="width: 20px">
+                            <img src="assets/img/banks/gsb.png" alt="" *ngIf="t.bankName === 'GSB'"
+                                 style="width: 20px">
+                            <img src="assets/img/banks/ktc.png" alt="" *ngIf="t.bankName === 'KTB'"
+                                 style="width: 20px">
+                            <img src="assets/img/banks/tbank.png" alt="" *ngIf="t.bankName === 'TBANK'"
+                                 style="width: 20px">
+                            <img src="assets/img/banks/other.png" alt="" *ngIf="t.bankName === 'WALLET'"
+                                 style="width: 20px">
+                            <img src="assets/img/banks/wallet.png" alt="" *ngIf="t.bankName === 'TRUEMONEY'"
+                                 style="width: 20px">
+                            <img src="assets/img/banks/kkp.png" alt="" *ngIf="t.bankName === 'KKP'"
+                                 style="width: 20px">
+                        </td>
+                        <td class="text-center align-middle">{{t.bankName}}</td>
+                        <td class="text-center align-middle">
+                            ({{t.bankNo}})
+                        </td>
+                        <td class="text-center align-middle">
+                            {{t.username}}
+                        </td>
+                        <td class="text-center align-middle">
+                            {{t.createDate | date:'dd/MM/yyyy HH:mm:ss'}}
+                        </td>
+                        <td class="text-center align-middle">
+                            {{t.updateDate | date:'dd/MM/yyyy HH:mm:ss'}}
+                        </td>
+                        <td class="text-right align-middle">
+                            {{t.value | number: '1.2-2'}}
+                        </td>
+                        <td class="text-right align-middle">
+                            {{t.bonus | number: '1.2-2'}}
+                        </td>
+                        <td class="text-right align-middle" style="background: coral">
+                            {{t.previousDownlineGiven | number: '1.2-2'}}
+                        </td>
+                        <td class="text-right align-middle">
+                            {{t.topup | number: '1.2-2'}}
+                        </td>
+                        <td class="text-right align-middle" style="background: cadetblue">
+                            {{t.currentDownlineGiven | number: '1.2-2'}}
+                        </td>
+                        <td class="text-center align-middle">
+                            {{t.actionBy ? t.actionBy : '-'}}
+                        </td>
+                        <td class="text-center align-middle">
+                           <span class="badge" [ngStyle]="t.remark && t.remark.includes('Auto') ? {'background': '#1ab394'} : ''" *ngIf="t.remark && t.remark.includes('Auto')">
+                                {{t.remark}}
+                            </span>
+                        </td>
+                    </tr>
+                    </tbody>
+
+                </table>
+
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="input-group pull-right">
+                            <pagination-controls id="page" (pageChange)="pageChange($event)" maxSize="9"
+                                                 previousLabel="Previous"
+                                                 nextLabel="Next"></pagination-controls>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+</div>

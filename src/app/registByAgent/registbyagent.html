@@ -1,0 +1,82 @@
+<h2 class="page-title">
+    ลิงค์สมัครสมาชิก
+</h2>
+
+<div class="row">
+    <div class="col-sm-8 col-md-8 col-lg-8">
+        <section widget class="widget">
+            <div class="widget-body">
+                <table class="table table-striped static-table">
+                    <thead>
+                    <tr>
+                        <th class="text-center">#</th>
+                        <th class="text-center">agent</th>
+                        <th class="text-center">ลิงค์สมัคร</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr *ngIf="result.length === 0">
+                        <td class="text-center align-middle" colspan="10">
+                            ไม่มีข้อมูล
+                        </td>
+                    </tr>
+                    <tr *ngFor="let p of result; let i=index">
+                        <td class="text-center align-middle">
+                            {{i+1}}
+                        </td>
+                        <td class="text-center">
+                            {{p.agent}}
+                        </td>
+                        <td class="text-center">
+                            {{p.link}}
+                        </td>
+                    </tr>
+                    </tbody>
+
+                </table>
+
+            </div>
+        </section>
+    </div>
+</div>
+
+<h2 class="page-title">
+    ลิงค์แนะนำเพื่อน
+</h2>
+<div class="row">
+    <div class="col-sm-8 col-md-8 col-lg-8">
+        <section widget class="widget">
+            <div class="widget-body">
+                <table class="table table-striped static-table">
+                    <thead>
+                    <tr>
+                        <th class="text-center">#</th>
+                        <th class="text-center">agent</th>
+                        <th class="text-center">ลิงค์ affiliate</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr *ngIf="result.length === 0">
+                        <td class="text-center align-middle" colspan="10">
+                            ไม่มีข้อมูล
+                        </td>
+                    </tr>
+                    <tr *ngFor="let p of result; let i=index">
+                        <td class="text-center align-middle">
+                            {{i+1}}
+                        </td>
+                        <td class="text-center">
+                            {{p.agent}}
+                        </td>
+                        <td class="text-center">
+                            {{p.affiliateLink}}
+                        </td>
+                    </tr>
+                    </tbody>
+
+                </table>
+                ลิงค์ AFFILIATE : ลิงค์สำหรับส่งต่อให้ผู้ที่สมัครใหม่ สมัครต่อจากตัวเองโดยระบุ username <br/>เช่น https://aff.autoufa.io/?p=75VJ&<strong>r=ufa3b8tt20082</strong>
+            </div>
+        </section>
+    </div>
+</div>

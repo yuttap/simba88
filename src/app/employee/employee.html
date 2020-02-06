@@ -1,0 +1,243 @@
+<div class="row">
+    <div class="col-md-8">
+        <h2>พนักงาน</h2>
+    </div>
+</div>
+<div class="row">
+    <div class="col-sm-12 col-md-12 col-lg-12 text-right" style="padding-bottom: 10px;" *ngIf="this.setting.getPosition() !== 'SECURITY'">
+        <button type="button" class="btn btn-inverse" tooltip="Edit" (click)="openModal('ADD', null)">
+            <i class="glyphicon glyphicon-plus-sign"></i> สร้างใหม่
+        </button>
+    </div>
+    <div class="col-sm-12 col-md-12 col-lg-12">
+        <section widget class="widget">
+            <div class="widget-body">
+                <table class="table table-striped static-table">
+                    <thead>
+                    <tr>
+                        <th class="text-center">#</th>
+                        <th class="text-center">USER</th>
+                        <th class="text-center">NAME</th>
+                        <th class="text-center">POSITION</th>
+                        <th class="text-center">DepositLimit</th>
+                        <th class="text-center">STATUS</th>
+                        <th class="text-center" *ngIf="this.setting.getPosition() === 'SECURITY'">Two Factor</th>
+                        <th class="text-center" *ngIf="this.setting.getPosition() !== 'SECURITY'">แก้ไข</th>
+                        <th class="text-center" *ngIf="this.setting.getPosition() === 'SECURITY'">สร้างรหัสยืนยันตัวตน</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr *ngIf="employees.length === 0">
+                        <td class="text-center align-middle" colspan="7">
+                            ไม่มีข้อมูล
+                        </td>
+                    </tr>
+                    <tr *ngFor="let user of employees; let i = index">
+                        <td class="text-center align-middle">
+                            {{i+1}}
+                        </td>
+                        <td class="text-center align-middle">
+                            {{user.username}}
+                        </td>
+                        <td class="text-center align-middle">
+                            {{user.name}}
+                        </td>
+                        <td class="text-center align-middle">
+                            <span *ngIf="user.position === 'LOW_ADMIN'">
+                                Staff
+                            </span>
+                            <span *ngIf="user.position === 'SUPER_ADMIN'">
+                                Super Admin
+                            </span>
+                            <span *ngIf="user.position === 'ADMIN'">
+                                Admin
+                            </span>
+                            <span *ngIf="user.position === 'J_ADMIN'">
+                                J Admin
+                            </span>
+                            <span *ngIf="user.position === 'J_14'">
+                                J14
+                            </span>
+                            <span *ngIf="user.position === 'SECURITY'">
+                               ผู้ดูแลความปลอดภัย
+                            </span>
+                            <span *ngIf="user.position === 'REGISTER_ONLY'">
+                               ผู้ดูแลสมัครสมาชิก
+                            </span>
+                        </td>
+                        <td class="text-center align-middle">
+                            {{user.depositLimit}}
+                        </td>
+                        <td class="text-center align-middle">
+                            <span *ngIf="user.active" class="badge badge-success" title="Active">Active</span>
+                            <span *ngIf="!user.active" class="badge badge-danger" title="Active">InActive</span>
+                        </td>
+                        <td class="text-center align-middle" *ngIf="this.setting.getPosition() === 'SECURITY'">
+                            <span *ngIf="user.isOtp" class="badge badge-success" title="Active">Active</span>
+                            <span *ngIf="!user.isOtp" class="badge badge-danger" title="Active">InActive</span>
+                        </td>
+                        <td class="text-center" *ngIf="this.setting.getPosition() !== 'SECURITY'">
+                            <button type="button" class="btn btn-inverse" tooltip="Edit" (click)="openModal('EDIT', user._id)">
+                                <i class="glyphicon glyphicon-pencil"></i>
+                            </button>
+                        </td>
+                        <td class="text-center" *ngIf="this.setting.getPosition() === 'SECURITY'">
+                            <button type="button" class="btn btn-inverse" tooltip="Edit" (click)="openTwoFactoryModal(user.username)">
+                                <i class="glyphicon glyphicon-pencil"></i>
+                            </button>
+                        </td>
+                    </tr>
+                    </tbody>
+
+                </table>
+            </div>
+        </section>
+    </div>
+</div>
+
+<div id="employeeModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"
+     style="display: none;">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content model-customer-detail">
+
+            <div class="modal-header">
+                <h4 class="modal-title" style="color: white;">ข้อมูลพนักงาน</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            </div>
+            <div class="modal-body">
+                <section widget class="widget">
+                    <div class="row">
+                        <div class="col-sm-12 col-md-12 col-lg-12 main-header">
+                            <form id="user-form" class="form-horizontal form-label-left parsleyjs"
+                                  novalidate="novalidate"
+                                  method="post"
+                                  data-parsley-priority-enabled="false"
+                                  data-parsley-excluded="input[name=gender]">
+                                <fieldset>
+                                    <legend class="section">Employee Info</legend>
+                                    <div class="form-group row">
+                                        <label class="col-form-label col-md-4" for="firstName">Username
+                                            <span class="required">*</span>
+                                        </label>
+
+                                        <div class="col-md-4">
+                                            <input type="text" [(ngModel)]="employeeDetail.username" [ngModelOptions]="{standalone: true}" id="firstName" name="firstName" required="required" class="form-control input-transparent">
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-form-label col-md-4" for="last-name">Password
+                                            <span class="required">*</span>
+                                        </label>
+
+                                        <div class="col-md-4">
+                                            <input type="text" [(ngModel)]="employeeDetail.password" [ngModelOptions]="{standalone: true}" id="last-name" name="last-name" required="required" class="form-control input-transparent">
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-form-label col-md-4" for="accountNo">Name
+                                            <span class="required">*</span>
+                                        </label>
+
+                                        <div class="col-md-4">
+                                            <input type="text" id="accountNo" [(ngModel)]="employeeDetail.name" [ngModelOptions]="{standalone: true}" name="accountNo" required="required" class="form-control input-transparent">
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-form-label col-md-4" for="recommend">Position
+
+                                        </label>
+
+                                        <div class="col-md-4">
+                                            <select id="recommend" style="width: 100%" [(ngModel)]="employeeDetail.position" [ngModelOptions]="{standalone: true}">
+                                                <option value="">เลือก</option>
+                                                <option value="SUPER_ADMIN">Super Admin</option>
+                                                <option value="ADMIN">Admin</option>
+                                                <option value="LOW_ADMIN">Staff</option>
+                                                <!--<option value="SECURITY">ผู้ดูแลความปลอดภัย</option>-->
+                                                <option value="J_ADMIN" *ngIf="isJAdmin">J Admin</option>
+                                                <option value="J_14" *ngIf="isJAdmin">J 14</option>
+                                                <option value="REGISTER_ONLY">ผู้ดูแลสมัครสมาชิก</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-form-label col-md-4" for="accountNo">Deposit Limit
+                                            <span class="required">*</span>
+                                        </label>
+
+                                        <div class="col-md-4">
+                                            <input type="text" id="depositLimit" [(ngModel)]="employeeDetail.depositLimit" [ngModelOptions]="{standalone: true}" name="depositLimit" required="required" class="form-control input-transparent">
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-form-label col-md-4">Active
+
+                                        </label>
+
+                                        <div class="col-md-4">
+                                            <div class="checkbox" style="padding-left: 0">
+                                                <label>
+                                                    <input type="checkbox" class="checkbox" [ngModelOptions]="{standalone: true}" [(ngModel)]="employeeDetail.active" >
+                                                    <span></span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </fieldset>
+                                <div class="form-actions">
+                                    <div class="row justify-content-md-center">
+                                        <div class="col-md-8 text-center">
+                                            <button type="submit" class="btn btn-primary" (click)="onSubmit()">ทำรายการ</button>
+                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">ปิด</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+
+<div id="twoFactoryModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"
+     style="display: none;">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content model-customer-detail">
+
+            <div class="modal-header">
+                <h4 class="modal-title" style="color: white;">รหัสยืนยันตัวตน</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            </div>
+            <div class="modal-body">
+                <section widget class="widget">
+                    <div class="row">
+                        <div class="col-sm-12 col-md-12 col-lg-12 main-header">
+                            <div class="row">
+                                <div class="col-sm-12 col-md-12 col-lg-12 text-center">
+                                    <img src="{{twoFactoryObj.data}}" alt="">
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-12 col-md-12 col-lg-12 text-center p-2">
+                                    <input type="text" id="otp" [(ngModel)]="twoFactoryObj.otp" placeholder="กรอกรหัสยืนยันตัวตน"  [ngModelOptions]="{standalone: true}" name="otp" required="required" class="form-control input-transparent">
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-12 col-md-12 col-lg-12 text-center p-2">
+                                    <button type="submit" class="btn btn-primary" (click)="confirmOtp()">ยืนยัน</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>

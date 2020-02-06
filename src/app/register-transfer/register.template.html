@@ -1,0 +1,132 @@
+<h2 class="page-title">
+    ย้ายสมาชิก
+</h2>
+<div class="row">
+    <div class="col-lg-7">
+        <section widget class="widget">
+            <div class="row" style="margin-bottom: 10px;">
+                <!-- NEW COL START -->
+                <div class="col-sm-12 col-md-12 col-lg-12 main-header">
+                    <form id="user-form" class="form-horizontal form-label-left parsleyjs"
+                          novalidate="novalidate"
+                          method="post"
+                          data-parsley-priority-enabled="false"
+                          data-parsley-excluded="input[name=gender]">
+                        <fieldset>
+                            <legend class="section">Personal Info</legend>
+                            <div class="form-group row">
+                                <label class="col-form-label col-md-4" for="username">รหัสผู้ใช้งาน
+                                    <span class="required">*</span>
+                                </label>
+
+                                <div class="col-md-4">
+                                    <input type="text" [(ngModel)]="userDetail.username" [ngModelOptions]="{standalone: true}" id="username" name="username" required="required" class="form-control input-transparent">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-form-label col-md-4" for="firstName">ชื่อจริง
+                                    <span class="required">*</span>
+                                </label>
+
+                                <div class="col-md-4">
+                                    <input type="text" [(ngModel)]="userDetail.firstName" [ngModelOptions]="{standalone: true}" id="firstName" name="firstName" required="required" class="form-control input-transparent">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-form-label col-md-4" for="last-name">นามสกุล
+                                    <span class="required">*</span>
+                                </label>
+
+                                <div class="col-md-4">
+                                    <input type="text" [(ngModel)]="userDetail.lastName" [ngModelOptions]="{standalone: true}" id="last-name" name="last-name" required="required" class="form-control input-transparent">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-form-label col-md-4" for="last-name">Agent Type
+                                    <span class="required">*</span>
+                                </label>
+
+                                <div class="col-md-4">
+                                    <select id="agentType" style="width: 100%" [(ngModel)]="userDetail.agentType" [ngModelOptions]="{standalone: true}">
+                                        <option *ngFor="let b of agentType" value="{{b.index}}">{{b.agent}}</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-form-label col-md-4" for="accountNo">เลขบัญชีธนาคาร
+                                    <span class="required">*</span>
+                                </label>
+
+                                <div class="col-md-4">
+                                    <input type="text" id="accountNo" [(ngModel)]="userDetail.accountNumber" [ngModelOptions]="{standalone: true}" name="accountNo" required="required" class="form-control input-transparent">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-form-label col-md-4" for="bankName">ธนาคาร
+                                    <span class="required">*</span>
+                                </label>
+
+                                <div class="col-md-4">
+                                    <select id="bankName" style="width: 100%" [(ngModel)]="userDetail.bankName" [ngModelOptions]="{standalone: true}">
+                                        <option value="">เลือก</option>
+                                        <option *ngFor="let b of banks" value="{{b.shortName}}">{{b.name.th}}</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-form-label col-md-4" for="recommendOther">เบอร์โทรศัพท์
+                                </label>
+
+                                <div class="col-md-4">
+                                    <input type="text" id="tel" [(ngModel)]="userDetail.tel" [ngModelOptions]="{standalone: true}" name="tel" class="form-control input-transparent">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-form-label col-md-4" for="recommend">รู้จักผ่าน
+
+                                </label>
+
+                                <div class="col-md-4">
+                                    <select id="recommend" style="width: 100%" [(ngModel)]="userDetail.recommend" [ngModelOptions]="{standalone: true}">
+                                        <option value="">เลือก</option>
+                                        <option value="Facebook">Facebook</option>
+                                        <option value="Google">Google</option>
+                                        <option value="เพื่อนแนะนำ">เพื่อนแนะนำ</option>
+                                        <option value="Line">Line</option>
+                                        <option value="อื่นๆ">อื่นๆ</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-form-label col-md-4" for="recommendOther">เพิ่มเติม
+                                </label>
+
+                                <div class="col-md-4">
+                                    <input type="text" id="recommendOther" [(ngModel)]="userDetail.recommendOther" [ngModelOptions]="{standalone: true}" name="recommendOther" class="form-control input-transparent">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-form-label col-md-4" for="recommend">เติมอัตโนมัติ
+
+                                </label>
+
+                                <div class="col-md-4">
+                                    <input type="checkbox" [(ngModel)]="userDetail.isAutoTopup" [ngModelOptions]="{standalone: true}">
+                                </div>
+                            </div>
+
+                        </fieldset>
+                        <div class="form-actions">
+                            <div class="row justify-content-md-center">
+                                <div class="col-md-8 text-center">
+                                    <button type="submit" class="btn btn-primary" (click)="register()" [disabled]="isClick">ทำรายการ</button>
+                                    <button type="button" class="btn btn-secondary" (click)="clearData()">ล้างข้อมูล</button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </section>
+    </div>
+</div>

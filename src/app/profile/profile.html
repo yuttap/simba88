@@ -1,0 +1,62 @@
+<div class="row">
+    <div class="col-md-8">
+        <h2>ข้อมูล</h2>
+    </div>
+</div>
+<div class="row">
+    <div class="col-7">
+         <div class="row">
+             <div class="col-sm-12 col-md-12 col-lg-12">
+                 <section widget class="widget">
+                     <div class="col-sm-12 col-md-12 col-lg-12 main-header">
+                         <form id="user-form" class="form-horizontal form-label-left parsleyjs"
+                               novalidate="novalidate"
+                               method="post"
+                               data-parsley-priority-enabled="false"
+                               data-parsley-excluded="input[name=gender]">
+                             <fieldset>
+                                 <legend class="section">Employee Info</legend>
+                                 <div class="form-group row">
+                                     <label class="col-form-label col-md-4" for="firstName">Username
+                                         <span class="required">*</span>
+                                     </label>
+
+                                     <div class="col-md-4">
+                                         <input type="text" [(ngModel)]="employeeDetail.username" [disabled]="true" [ngModelOptions]="{standalone: true}" id="firstName" name="firstName" required="required" class="form-control input-transparent">
+                                     </div>
+                                 </div>
+                                 <div class="form-group row">
+                                     <label class="col-form-label col-md-4" for="last-name">Password
+                                         <span class="required">*</span>
+                                     </label>
+
+                                     <div class="col-md-4">
+                                         <input type="text" [(ngModel)]="employeeDetail.password" [ngModelOptions]="{standalone: true}" id="last-name" name="last-name" required="required" class="form-control input-transparent">
+                                     </div>
+                                 </div>
+                                 <div class="form-group row">
+                                     <label class="col-form-label col-md-4" for="accountNo">Name
+                                         <span class="required">*</span>
+                                     </label>
+
+                                     <div class="col-md-4">
+                                         <input type="text" id="accountNo" [(ngModel)]="employeeDetail.name" [ngModelOptions]="{standalone: true}" name="accountNo" required="required" class="form-control input-transparent">
+                                     </div>
+                                 </div>
+                             </fieldset>
+                             <div class="form-actions">
+                                 <div class="row justify-content-md-center">
+                                     <div class="col-md-8 text-center">
+                                         <button type="submit" class="btn btn-primary" (click)="update()">ทำรายการ</button>
+                                         <button type="button" class="btn btn-secondary" data-dismiss="modal">ปิด</button>
+                                     </div>
+                                 </div>
+                             </div>
+                         </form>
+                     </div>
+                 </section>
+             </div>
+         </div>
+    </div>
+
+</div>

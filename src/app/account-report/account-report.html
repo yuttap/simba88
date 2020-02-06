@@ -1,0 +1,474 @@
+<div class="row">
+    <div class="col-md-8">
+        <h2>รายงานตามสมาชิก</h2>
+    </div>
+</div>
+<div class="row">
+    <div class="col-sm-12 col-md-12 col-lg-12">
+        <section widget class="widget">
+            <header>
+                <h5>ค้นหา</h5>
+            </header>
+            <div class="widget-body">
+                <form id="order-form" class="smart-form" novalidate="novalidate">
+                    <fieldset>
+                        <div class="row">
+                            <section class="col col-2">
+                                <label class="input">
+                                    <datetime class="form-line" [timepicker]="false" [datepicker]="datepickerOpts"
+                                              [(ngModel)]="startDate" name="startDate" id="startDate"></datetime>
+                                </label>
+                            </section>
+                            <section class="col col-2">
+                                <label class="input">
+                                    <datetime class="form-line" [timepicker]="false" [datepicker]="datepickerOpts"
+                                              [(ngModel)]="endDate" name="endDate" id="endDate"></datetime>
+                                </label>
+                            </section>
+
+                            <div class="form-group row">
+                                <label class="col-form-label col-md-4" for="recommend">Agent</label>
+                                <div class="col-md-7">
+                                    <select id="agentType" name="agentType" [(ngModel)]="agentType" style="width: 100%">
+                                        <option value="0" selected="selected">All</option>
+                                        <option value="{{ag.index}}" *ngFor="let ag of agType">{{ag.agent}}</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-1">&nbsp;</div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-form-label col-md-4" for="recommend" style="white-space: nowrap">search by username &nbsp;&nbsp;&nbsp;&nbsp;</label>
+                                <div class="col-md-7">
+                                    <input type="text" name="username" [(ngModel)]="username"/>
+                                </div>
+                                <div class="col-md-1">&nbsp;</div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-form-label col-md-4" for="recommend">เรียงลำดับ</label>
+                                <div class="col-md-8">
+                                    <select name="sortingType" [(ngModel)]="sortingType" style="width: 100%">
+                                        <option value="">------ เลือก ------</option>
+                                        <option value="depositCount" >จำนวนครั้งเติมมากสุด</option>
+                                        <option value="depositAmount">เติมมากสุด</option>
+                                        <option value="withdrawCount">จำนวนครั้งถอนมากสุด</option>
+                                        <option value="withdrawAmount">ถอนมากสุด</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <section class="col col-3">
+                                <a style="padding: 5px" class="btn btn-primary" (click)="onLoad()">ค้นหา</a>
+                                <a style="padding: 5px" class="btn btn-warning" (click)="yesterday()">เมื่อวาน</a>
+                                <a style="padding: 5px" class="btn btn-success" (click)="today()">วันนี้</a>
+                            </section>
+
+
+                        </div>
+                    </fieldset>
+                </form>
+            </div>
+        </section>
+
+    </div>
+</div>
+<div class="row">
+    <div class="col-sm-12 col-md-12 col-lg-12">
+        <section widget class="widget">
+            <div class="widget-body">
+                <table class="table table-striped static-table">
+                    <thead>
+                    <tr>
+                        <th class="text-center">#</th>
+                        <th class="text-right">USER</th>
+                        <th class="text-right">จำนวนครั้งที่เติม</th>
+                        <th class="text-right">เติมทั้งหมด</th>
+                        <th class="text-right">จำนวนครั้งที่ถอน</th>
+                        <th class="text-right">ถอนทั้งหมด</th>
+                        <th class="text-right">กำไรขาดทุนไม่รวมโบนัส</th>
+                        <th></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr *ngIf="users.length === 0">
+                        <td class="text-center align-middle" colspan="10">
+                            ไม่มีข้อมูล
+                        </td>
+                    </tr>
+                    <tr *ngIf="users.length !== 0" class="bold" style="background: black">
+                        <td class="text-center align-middle"><strong>Total</strong></td>
+                        <td class="text-right align-middle"><strong>Active User : {{totalData.totalRecord}}</strong></td>
+                        <td class="text-right align-middle">{{totalData.totalDepositTran}}</td>
+                        <td class="text-right align-middle">
+                            <span class="negative" *ngIf="totalData.totalDeposit < 0">{{totalData.totalDeposit | number: '1.2-2'}}</span>
+                            <span *ngIf="totalData.totalDeposit >= 0">{{totalData.totalDeposit | number: '1.2-2'}}</span>
+                        </td>
+                        <td class="text-right align-middle">{{totalData.totalWithdrawTran}}</td>
+                        <td class="text-right align-middle">
+                            <span class="negative" *ngIf="totalData.totalWithdraw < 0">{{totalData.totalWithdraw | number: '1.2-2'}}</span>
+                            <span *ngIf="totalData.totalWithdraw >= 0">{{totalData.totalWithdraw | number: '1.2-2'}}</span>
+                        </td>
+                        <td class="text-right align-middle" [ngStyle]="totalData.totalWL >= 0 ? {'background' : 'green'} : {'background' : 'red'}">
+                            {{totalData.totalWL | number: '1.2-2'}}
+                        </td>
+                    </tr>
+                    <tr *ngFor="let user of users | paginate: paginationConfig; let i = index">
+                        <td class="text-center align-middle">
+                            <!--{{i+1}}-->
+
+
+                            {{(i)+(paginationConfig.itemsPerPage*paginationConfig.currentPage)-49}}
+                        </td>
+                        <td class="text-right align-middle">
+                            {{user.username}}
+                        </td>
+                        <td class="text-right align-middle">
+                            <span class="negative" *ngIf="user.depositCount < 0">{{user.depositCount | number: '1.2-2'}}</span>
+                            <span *ngIf="user.depositCount >= 0">{{user.depositCount}}</span>
+                        </td>
+                        <td class="text-right align-middle">
+                            <span class="negative" *ngIf="user.depositAmount < 0">{{user.depositAmount | number: '1.2-2'}}</span>
+                            <span *ngIf="user.depositAmount >= 0">{{user.depositAmount | number: '1.2-2'}}</span>
+                        </td>
+                        <td class="text-right align-middle">
+                            <span class="negative" *ngIf="user.withdrawCount < 0">{{user.withdrawCount | number: '1.2-2'}}</span>
+                            <span *ngIf="user.withdrawCount >= 0">{{user.withdrawCount}}</span>
+                        </td>
+                        <td class="text-right align-middle">
+                            <span class="negative" *ngIf="user.withdrawAmount < 0">{{user.withdrawAmount | number: '1.2-2'}}</span>
+                            <span *ngIf="user.withdrawAmount >= 0">{{user.withdrawAmount | number: '1.2-2'}}</span>
+                        </td>
+                        <td class="text-right align-middle" [ngStyle]="user.profit >= 0 ? {'background' : 'green'} : {'background' : 'red'}">
+                            {{user.profit | number: '1.2-2'}}
+                        </td>
+                    </tr>
+                    </tbody>
+
+                </table>
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="input-group pull-right">
+                            <pagination-controls id="page" (pageChange)="pageChange($event)" maxSize="9"
+                                                 previousLabel="Previous"
+                                                 nextLabel="Next"></pagination-controls>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+</div>
+
+<div id="topupModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"
+     style="display: none;">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h4 class="modal-title" id="myModalLabel2">รายงานการเติม</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-sm-12 col-md-12 col-lg-12">
+                        <table class="table table-striped">
+                            <thead style="background: slategray">
+                            <tr>
+                                <th class="text-center">ธนาคาร</th>
+                                <th class="text-center">เครดิตก่อนเติม</th>
+                                <th class="text-center">ยอดเติม</th>
+                                <th class="text-center">โบนัส</th>
+                                <th class="text-center">ยอดหลังเติม</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr *ngIf="topUpReports.length === 0">
+                                <td class="text-center align-middle" colspan="5">
+                                    ยังไม่มีการฝากเงิน
+                                </td>
+                            </tr>
+                            <tr *ngFor="let t of topUpReports; let i = index">
+                                <td class="text-center align-middle">
+                                    <img src="assets/img/banks/kbank.png" alt="" *ngIf="t.bankName === 'KBANK'"
+                                         style="width: 20px">
+                                    <img src="assets/img/banks/scb.png" alt="" *ngIf="t.bankName === 'SCB'"
+                                         style="width: 20px">
+                                    <img src="assets/img/banks/bbl.png" alt="" *ngIf="t.bankName === 'BBL'"
+                                         style="width: 20px">
+                                    <img src="assets/img/banks/tmb.png" alt="" *ngIf="t.bankName === 'TMB'"
+                                         style="width: 30px">
+                                    <img src="assets/img/banks/bay.png" alt="" *ngIf="t.bankName === 'BAY'"
+                                         style="width: 20px">
+                                    <img src="assets/img/banks/gsb.png" alt="" *ngIf="t.bankName === 'GSB'"
+                                         style="width: 20px">
+                                    <img src="assets/img/banks/ktc.png" alt="" *ngIf="t.bankName === 'KTB'"
+                                         style="width: 20px">
+                                    <img src="assets/img/banks/tbank.png" alt="" *ngIf="t.bankName === 'TBANK'"
+                                         style="width: 20px">
+                                    <img src="assets/img/banks/other.png" alt="" *ngIf="t.bankName === 'WALLET'"
+                                         style="width: 20px">
+                                    <img src="assets/img/banks/wallet.png" alt="" *ngIf="t.bankName === 'TRUEMONEY'"
+                                         style="width: 20px">
+                                    <img src="assets/img/banks/kkp.png" alt="" *ngIf="t.bankName === 'KKP'"
+                                         style="width: 20px">
+                                    <br>
+                                    <small><i class="fa fa-clock-o"></i> Created {{t.updateDate | date:'dd/MM/yyyy HH:mm:ss'}}
+                                    </small>
+                                </td>
+                                <td class="text-center align-middle">
+                                    {{t.previousDownlineGiven | number: '1.2-2'}}
+                                </td>
+                                <td class="text-center align-middle">
+                                    {{t.value | number: '1.2-2'}}
+                                </td>
+                                <td class="text-center align-middle">
+                                    {{t.bonus | number: '1.2-2'}}
+                                </td>
+                                <td class="text-center align-middle">
+                                    {{t.currentDownlineGiven | number: '1.2-2'}}
+                                </td>
+                            </tr>
+                            </tbody>
+
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">ปิด</button>
+            </div>
+
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+
+<div id="withdrawModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"
+     style="display: none;">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h4 class="modal-title">รายงานการถอน</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-sm-12 col-md-12 col-lg-12">
+                        <table class="table table-striped">
+                            <thead style="background: slategray">
+                            <tr>
+                                <th class="text-center">ธนาคาร</th>
+                                <th class="text-center">จำนวนเงิน</th>
+                                <th class="text-center">สถานะ</th>
+                                <th class="text-center">วันที่</th>
+                                <th class="text-center">หมายเหตุ</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr *ngIf="withdrawReports.length === 0">
+                                <td class="text-center align-middle" colspan="5">
+                                    ยังไม่มีการถอนเงิน
+                                </td>
+                            </tr>
+                            <tr *ngFor="let w of withdrawReports; let i = index">
+                                <td class="text-center align-middle">
+                                    <img src="assets/img/banks/kbank.png" alt="" *ngIf="w.bankName === 'KBANK'"
+                                         style="width: 20px">
+                                    <img src="assets/img/banks/scb.png" alt="" *ngIf="w.bankName === 'SCB'"
+                                         style="width: 20px">
+                                    <img src="assets/img/banks/bbl.png" alt="" *ngIf="w.bankName === 'BBL'"
+                                         style="width: 20px">
+                                    <img src="assets/img/banks/tmb.png" alt="" *ngIf="w.bankName === 'TMB'"
+                                         style="width: 30px">
+                                    <img src="assets/img/banks/bay.png" alt="" *ngIf="w.bankName === 'BAY'"
+                                         style="width: 20px">
+                                    <img src="assets/img/banks/gsb.png" alt="" *ngIf="w.bankName === 'GSB'"
+                                         style="width: 20px">
+                                    <img src="assets/img/banks/ktc.png" alt="" *ngIf="w.bankName === 'KTB'"
+                                         style="width: 20px">
+                                    <img src="assets/img/banks/tbank.png" alt="" *ngIf="w.bankName === 'TBANK'"
+                                         style="width: 20px">
+                                    <img src="assets/img/banks/other.png" alt="" *ngIf="w.bankName === 'WALLET'"
+                                         style="width: 20px">
+                                    <img src="assets/img/banks/wallet.png" alt="" *ngIf="w.bankName === 'TRUEMONEY'"
+                                         style="width: 20px">
+                                    <img src="assets/img/banks/kkp.png" alt="" *ngIf="w.bankName === 'KKP'"
+                                         style="width: 20px">
+                                    <br>
+                                    <small><i class="fa fa-clock-o"></i> Created {{w.updateDate | date:'dd/MM/yyyy HH:mm:ss'}}</small>
+                                </td>
+                                <td class="text-center align-middle">
+                                    {{w.value | number: '1.2-2'}}
+                                </td>
+                                <td class="text-center align-middle">
+                                    <span *ngIf="w.status === 'CREATE'" class="label label-info" title="Status">Create</span>
+                                    <span *ngIf="w.status === 'APPROVE'" class="label label-primary" title="Status">Approve</span>
+                                    <span *ngIf="w.status === 'REJECT'" class="label label-danger" title="Status">Reject</span>
+                                    <span *ngIf="w.status === 'PROCESS'" class="label label-secondary" title="Status">Process</span>
+                                    <span *ngIf="w.status === 'FAIL'" class="label label-warning" title="Status">Fail</span>
+                                    <span *ngIf="w.status === 'SUCCESS'" class="label label-success" title="Status">Success</span>
+                                    <span *ngIf="w.status === 'MANUAL'" class="label label-success" title="Status">Manual</span>
+                                </td>
+                                <td class="text-center align-middle">
+                                    {{w.createDate | date:'dd/MM/yyyy HH:mm'}}
+                                </td>
+                                <td class="text-center align-middle">
+                                    {{w.remark}}
+                                </td>
+                            </tr>
+                            </tbody>
+
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">ปิด</button>
+            </div>
+
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+
+<div id="customerModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"
+     style="display: none;">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content model-customer-detail">
+
+            <div class="modal-header">
+                <h4 class="modal-title" style="color: white;">ข้อมูลสมาชิก</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            </div>
+            <div class="modal-body">
+                <section widget class="widget">
+                    <div class="row">
+                        <div class="col-sm-12 col-md-12 col-lg-12 main-header">
+                            <form id="user-form" class="form-horizontal form-label-left parsleyjs"
+                                  novalidate="novalidate"
+                                  method="post"
+                                  data-parsley-priority-enabled="false"
+                                  data-parsley-excluded="input[name=gender]">
+                                <fieldset>
+                                    <legend class="section">Main Info</legend>
+                                    <div class="form-group row">
+                                        <label class="col-form-label col-md-4" for="firstName">Username
+                                            <span class="required">*</span>
+                                        </label>
+
+                                        <div class="col-md-4">
+                                            <input type="text" readonly [(ngModel)]="userDetail.username" [ngModelOptions]="{standalone: true}" id="username" name="username" required="required" class="form-control input-transparent">
+                                        </div>
+                                    </div>
+                                    <div class="form-group row" *ngIf="setting.getPosition() === 'SUPER_ADMIN'">
+                                        <label class="col-form-label col-md-4" for="firstName">Password
+                                            <span class="required">*</span>
+                                        </label>
+
+                                        <div class="col-md-4">
+                                            <input type="text" readonly [(ngModel)]="userDetail.password"  [ngModelOptions]="{standalone: true}" id="password" name="password" required="required" class="form-control input-transparent">
+                                        </div>
+                                    </div>
+                                    <legend class="section">Personal Info</legend>
+                                    <div class="form-group row">
+                                        <label class="col-form-label col-md-4" for="firstName">ชื่อจริง
+                                            <span class="required">*</span>
+                                        </label>
+
+                                        <div class="col-md-4">
+                                            <input type="text" [(ngModel)]="userDetail.firstName" [disabled]="position !== 'SUPER_ADMIN'" [ngModelOptions]="{standalone: true}" id="firstName" name="firstName" required="required" class="form-control input-transparent">
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-form-label col-md-4" for="last-name">นามสกุล
+                                            <span class="required">*</span>
+                                        </label>
+
+                                        <div class="col-md-4">
+                                            <input type="text" [(ngModel)]="userDetail.lastName" [disabled]="position !== 'SUPER_ADMIN'" [ngModelOptions]="{standalone: true}" id="last-name" name="last-name" required="required" class="form-control input-transparent">
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-form-label col-md-4" for="accountNo">เลขบัญชีธนาคาร
+                                            <span class="required">*</span>
+                                        </label>
+
+                                        <div class="col-md-4">
+                                            <input type="text" id="accountNo" [(ngModel)]="userDetail.accountNumber" [disabled]="position !== 'SUPER_ADMIN'" [ngModelOptions]="{standalone: true}" name="accountNo" required="required" class="form-control input-transparent">
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-form-label col-md-4" for="bankName">ธนาคาร
+                                            <span class="required">*</span>
+                                        </label>
+
+                                        <div class="col-md-4">
+                                            <select id="bankName" style="width: 100%" [(ngModel)]="userDetail.bankName" [disabled]="position !== 'SUPER_ADMIN'" [ngModelOptions]="{standalone: true}">
+                                                <option value="">เลือก</option>
+                                                <option *ngFor="let b of banks" value="{{b.shortName}}">{{b.name.th}}</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row" *ngIf="position === 'SUPER_ADMIN'">
+                                        <label class="col-form-label col-md-4" for="recommendOther">เบอร์โทรศัพท์
+                                        </label>
+
+                                        <div class="col-md-4">
+                                            <input type="text" id="tel" [(ngModel)]="userDetail.tel" [ngModelOptions]="{standalone: true}" name="tel" class="form-control input-transparent">
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-form-label col-md-4" for="recommend">รู้จักผ่าน
+
+                                        </label>
+
+                                        <div class="col-md-4">
+                                            <select id="recommend" style="width: 100%" [(ngModel)]="userDetail.recommend" [disabled]="position !== 'SUPER_ADMIN'" [ngModelOptions]="{standalone: true}">
+                                                <option value="">เลือก</option>
+                                                <option value="Facebook">Facebook</option>
+                                                <option value="Google">Google</option>
+                                                <option value="เพื่อนแนะนำ">เพื่อนแนะนำ</option>
+                                                <option value="Line">Line</option>
+                                                <option value="อื่นๆ">อื่นๆ</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-form-label col-md-4" for="recommendOther">เพิ่มเติม
+                                        </label>
+
+                                        <div class="col-md-4">
+                                            <input type="text" id="recommendOther" [(ngModel)]="userDetail.recommendOther" [disabled]="position !== 'SUPER_ADMIN'" [ngModelOptions]="{standalone: true}" name="recommendOther" class="form-control input-transparent">
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group row">
+                                        <label class="col-form-label col-md-4" for="recommend">เติมอัตโนมัติ
+
+                                        </label>
+
+                                        <div class="col-md-4">
+                                            <input type="checkbox" [ngModelOptions]="{standalone: true}" [(ngModel)]="userDetail.isAutoTopup" >
+                                        </div>
+                                    </div>
+                                </fieldset>
+                                <div class="form-actions">
+                                    <div class="row justify-content-md-center">
+                                        <div class="col-md-8 text-center">
+                                            <button type="submit" class="btn btn-primary" (click)="update(userDetail)" [disabled]="isClick || position !== 'SUPER_ADMIN'">ทำรายการ</button>
+                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">ปิด</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>

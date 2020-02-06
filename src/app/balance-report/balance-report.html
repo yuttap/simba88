@@ -1,0 +1,114 @@
+<div class="row">
+    <div class="col-md-8">
+        <h2>รายงานสรุปยอด</h2>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-sm-12 col-md-12 col-lg-12">
+        <section widget class="widget">
+            <header>
+                <h5>ค้นหา</h5>
+            </header>
+            <div class="widget-body">
+                <form id="order-form" class="smart-form" novalidate="novalidate">
+                    <fieldset>
+                        <div class="row">
+                            <section class="col col-2">
+                                <label class="input">
+                                    <datetime class="form-line" [timepicker]="false" [datepicker]="datepickerOpts"
+                                              [(ngModel)]="startDate" name="startDate" id="startDate"></datetime>
+                                </label>
+                            </section>
+                            <section class="col col-2">
+                                <label class="input">
+                                    <datetime class="form-line" [timepicker]="false" [datepicker]="datepickerOpts"
+                                              [(ngModel)]="endDate" name="endDate" id="endDate"></datetime>
+                                </label>
+                            </section>
+                            <section class="col col-3">
+                                <a style="padding: 5px" class="btn btn-primary" (click)="onLoad()">ค้นหา</a>
+                                <a style="padding: 5px" class="btn btn-warning" (click)="yesterday()">เมื่อวาน</a>
+                                <a style="padding: 5px" class="btn btn-success" (click)="today()">วันนี้</a>
+                            </section>
+                        </div>
+                    </fieldset>
+                </form>
+            </div>
+        </section>
+
+    </div>
+</div>
+<div class="row">
+    <div class="col-sm-12 col-md-12 col-lg-12">
+        <section widget class="widget">
+            <header>
+                <h5>รายการสรุปฝาก-ถอน</h5>
+            </header>
+            <div class="widget-body">
+
+                <table class="table table-striped static-table">
+                    <thead style="background: slategray">
+                    <tr>
+                        <th class="text-center">ฝาก</th>
+                        <th class="text-center">ถอน</th>
+                        <th class="text-center">กำไรสุทธิ</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td class="text-center align-middle">
+                            {{reports.totalTopup | number: '1.2-2'}}
+                        </td>
+                        <td class="text-center align-middle">
+                            {{reports.totalWithdraw | number: '1.2-2'}}
+                        </td>
+                        <td class="text-center align-middle" *ngIf="reports.profitLostNet > 0" style="color: green;">
+                           <b> {{reports.profitLostNet | number: '1.2-2'}}</b>
+                        </td>
+                        <td class="text-center align-middle" *ngIf="reports.profitLostNet < 0" style="color: red;">
+                            <b> {{reports.profitLostNet | number: '1.2-2'}}</b>
+                        </td>
+                        <td class="text-center align-middle" *ngIf="reports.profitLostNet == 0">
+                            <b> {{reports.profitLostNet | number: '1.2-2'}}</b>
+                        </td>
+                    </tr>
+                    </tbody>
+
+                </table>
+            </div>
+        </section>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-sm-12 col-md-12 col-lg-12">
+        <section widget class="widget">
+            <header>
+                <h5>รายการสรุปเพิ่มเครดิต-ตัดเครดิต</h5>
+            </header>
+            <div class="widget-body">
+
+                <table class="table table-striped static-table">
+                    <thead style="background: slategray">
+                    <tr>
+                        <th class="text-center">เพิ่มเครดิค</th>
+                        <th class="text-center">ตัดเครดิต</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td class="text-center align-middle">
+                            {{reports.problem?.totalDeposit | number: '1.2-2'}}
+                        </td>
+                        <td class="text-center align-middle">
+                            {{reports.problem?.totalWithdraw | number: '1.2-2'}}
+                        </td>
+                    </tr>
+                    </tbody>
+
+                </table>
+            </div>
+        </section>
+    </div>
+</div>

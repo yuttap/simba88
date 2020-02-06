@@ -1,0 +1,374 @@
+<div class="row">
+    <div class="col-md-8">
+        <h2>รายงานการถอนเงิน</h2>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-sm-12 col-md-12 col-lg-12">
+        <section widget class="widget">
+            <div class="widget-body">
+
+                <table class="table table-striped static-table">
+                    <thead style="background: slategray">
+                    <tr>
+                        <th class="text-center">ธนาคาร</th>
+                        <th class="text-center">ธนาคารบัญชีที่</th>
+                        <th class="text-center">จำนวนรายการ</th>
+                        <th class="text-center">ยอดรวมเงิน</th>
+                        <th class="text-center">ยอดรวมเงินตัดจริง</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr *ngIf="banks.length === 0">
+                        <td class="text-center align-middle" colspan="10">
+                            ยังไม่มีรายการ
+                        </td>
+                    </tr>
+                    <tr *ngFor="let t of banks; let i = index">
+
+                        <td class="text-center align-middle">
+
+                            <img src="assets/img/banks/kbank.png" alt="" *ngIf="t._id.bankSet === 'KBANK'"
+                                 style="width: 20px">
+                            <img src="assets/img/banks/scb.png" alt="" *ngIf="t._id.bankSet === 'SCB'"
+                                 style="width: 20px">
+                            <img src="assets/img/banks/bbl.png" alt="" *ngIf="t._id.bankSet === 'BBL'"
+                                 style="width: 20px">
+                            <img src="assets/img/banks/tmb.png" alt="" *ngIf="t._id.bankSet === 'TMB'"
+                                 style="width: 30px">
+                            <img src="assets/img/banks/bay.png" alt="" *ngIf="t._id.bankSet === 'BAY'"
+                                 style="width: 20px">
+                            <img src="assets/img/banks/gsb.png" alt="" *ngIf="t._id.bankSet === 'GSB'"
+                                 style="width: 20px">
+                            <img src="assets/img/banks/ktc.png" alt="" *ngIf="t._id.bankSet === 'KTB'"
+                                 style="width: 20px">
+                            <img src="assets/img/banks/tbank.png" alt="" *ngIf="t._id.bankSet === 'TBANK'"
+                                 style="width: 20px">
+                            <img src="assets/img/banks/other.png" alt="" *ngIf="t._id.bankSet === 'WALLET'"
+                                 style="width: 20px">
+                            <img src="assets/img/banks/wallet.png" alt="" *ngIf="t._id.bankSet === 'TRUEMONEY'"
+                                 style="width: 20px">
+                            <img src="assets/img/banks/kkp.png" alt="" *ngIf="t._id.bankSet === 'KKP'"
+                                 style="width: 20px">
+                        </td>
+
+                        <td class="text-center align-middle">
+                            ({{t._id.accountSet}})
+                        </td>
+                        <td class="text-center align-middle">
+                            {{t.count}}
+                        </td>
+                        <td class="text-center align-middle">
+                            {{t.summary | number: '1.2-2'}}
+                        </td>
+                        <td class="text-center align-middle">
+                            {{t.summaryReal | number: '1.2-2'}}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td style="text-align: center;font-weight: bold">Total</td>
+                        <td style="text-align: center;">{{summaryTrans | number}}</td>
+                        <td style="text-align: center;">{{summary | number: '1.2-2'}}</td>
+                        <td style="text-align: center;">{{summaryReal | number: '1.2-2'}}</td>
+                    </tr>
+                    </tbody>
+
+                </table>
+            </div>
+        </section>
+    </div>
+</div>
+<div class="row">
+    <div class="col-sm-12 col-md-12 col-lg-12">
+        <section widget class="widget">
+            <header>
+                <h5>ค้นหา</h5>
+            </header>
+            <div class="widget-body">
+                <form id="order-form" class="smart-form" novalidate="novalidate">
+                    <fieldset>
+                        <div class="row">
+                            <section class="col col-2">
+                                <label class="input">
+                                    <datetime class="form-line" [timepicker]="false" [datepicker]="datepickerOpts"
+                                              [(ngModel)]="startDate" name="startDate" id="startDate"></datetime>
+                                </label>
+                            </section>
+                            <section class="col col-2">
+                                <label class="input">
+                                    <datetime class="form-line" [timepicker]="false" [datepicker]="datepickerOpts"
+                                              [(ngModel)]="endDate" name="endDate" id="endDate"></datetime>
+                                </label>
+                            </section>
+                            <section class="col col-2">
+                                <select id="status" style="width: 100%" [(ngModel)]="status" (change)="onLoad()" [ngModelOptions]="{standalone: true}">
+                                    <option value="ALL">ทั้งหมด</option>
+                                    <option value="CREATE">Create</option>
+                                    <option value="APPROVE">Approve</option>
+                                    <option value="SUCCESS">Success</option>
+                                    <option value="MANUAL">Manual</option>
+                                    <option value="DONE">Success and Manual</option>
+                                </select>
+                            </section>
+                            <section class="col col-2">
+                                <div class="row" >
+                                    <span>Agent &nbsp;</span>
+                                    <select id="agentType" name="agentType" [(ngModel)]="agentType" style="width: 70%">
+                                        <option value="0" selected="selected">All</option>
+                                        <option value="{{ag.index}}" *ngFor="let ag of agType">{{ag.agent}}</option>
+                                    </select>
+                                </div>
+                            </section>
+                            <section class="col col-2">
+                                <div class="input-group input-group-transparent">
+                                    <span class="input-group-addon"><i class="fa fa-user"></i></span>
+                                    <input id="prepended-input" class="form-control input-transparent"
+                                           [ngModelOptions]="{standalone: true}" [(ngModel)]="username" type="text"
+                                           placeholder="ข้อมูลต่างๆ">
+                                </div>
+                            </section>
+                            <section class="col col-3">
+                                <a style="padding: 5px" class="btn btn-primary" (click)="onLoad()">ค้นหา</a>
+                                <a style="padding: 5px" class="btn btn-warning" (click)="yesterday()">เมื่อวาน</a>
+                                <a style="padding: 5px" class="btn btn-success" (click)="today()">วันนี้</a>
+                            </section>
+                        </div>
+                    </fieldset>
+                </form>
+            </div>
+        </section>
+
+    </div>
+</div>
+<div class="row">
+    <div class="col-sm-12 col-md-12 col-lg-12">
+        <section widget class="widget">
+            <div class="widget-body">
+
+                <table class="table table-striped static-table">
+                    <thead style="background: slategray">
+                    <tr style="background: black">
+                        <td colspan="5" class="text-right">รายการถอนทั้งหมด ({{count}})	</td>
+                        <td class="text-right">{{summary | number: '1.2-2'}}</td>
+                        <td colspan="13"></td>
+                    </tr>
+                    <tr>
+                        <th class="text-center">#</th>
+                        <th class="text-center">ธนาคาร</th>
+                        <th class="text-center">บัญชีชุดที่</th>
+                        <th class="text-center">ยูสเซอร์</th>
+                        <!--<th class="text-center">เครดิตก่อนถอน</th>-->
+                        <th class="text-center">จำนนวนเงิน</th>
+                        <!--<th class="text-center">เครดิตหลังถอน</th>-->
+                        <th class="text-center">วันที่ถอน</th>
+                        <th class="text-center">อัพเดท</th>
+                        <th class="text-center">สถานนะ</th>
+                        <th class="text-center">บอท</th>
+                        <th class="text-center">ทำโดย</th>
+                        <th class="text-center">หมายเหตุ</th>
+                        <th class="text-center">เงินในบัญชี</th>
+                        <th class="text-center">อนุมัติ</th>
+                        <th class="text-center">รีเซ็ต</th>
+                        <th class="text-center">ถอนมือ</th>
+                        <th class="text-center">ยกเลิก</th>
+                        <th class="text-center" *ngIf="setting.getPosition() === 'SUPER_ADMIN'">ปฏิเสธ</th>
+                        <th class="text-center">สลิป</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr *ngIf="reports.length === 0">
+                        <td class="text-center align-middle" colspan="18">
+                            ยังไม่มีการถอนเงิน
+                        </td>
+                    </tr>
+                    <tr *ngFor="let t of reports | paginate: paginationConfig; let i = index">
+                        <td class="text-center align-middle">
+                            {{t.transactionId}}
+                        </td>
+                        <td class="text-center align-middle">
+
+                            <img src="assets/img/banks/kbank.png" alt="" *ngIf="t.bankName === 'KBANK'"
+                                 style="width: 20px">
+                            <img src="assets/img/banks/scb.png" alt="" *ngIf="t.bankName === 'SCB'"
+                                 style="width: 20px">
+                            <img src="assets/img/banks/bbl.png" alt="" *ngIf="t.bankName === 'BBL'"
+                                 style="width: 20px">
+                            <img src="assets/img/banks/tmb.png" alt="" *ngIf="t.bankName === 'TMB'"
+                                 style="width: 30px">
+                            <img src="assets/img/banks/bay.png" alt="" *ngIf="t.bankName === 'BAY'"
+                                 style="width: 20px">
+                            <img src="assets/img/banks/gsb.png" alt="" *ngIf="t.bankName === 'GSB'"
+                                 style="width: 20px">
+                            <img src="assets/img/banks/ktc.png" alt="" *ngIf="t.bankName === 'KTB'"
+                                 style="width: 20px">
+                            <img src="assets/img/banks/tbank.png" alt="" *ngIf="t.bankName === 'TBANK'"
+                                 style="width: 20px">
+                            <img src="assets/img/banks/other.png" alt="" *ngIf="t.bankName === 'WALLET'"
+                                 style="width: 20px">
+                            <img src="assets/img/banks/wallet.png" alt="" *ngIf="t.bankName === 'TRUEMONEY'"
+                                 style="width: 20px">
+                            <img src="assets/img/banks/kkp.png" alt="" *ngIf="t.bankName === 'KKP'"
+                                 style="width: 20px">
+                            <br>
+                            {{t.accountNumber}}
+                            <br>
+                            {{t.name}}
+                        </td>
+                        <td class="text-center align-middle">
+
+                            <img src="assets/img/banks/kbank.png" alt="" *ngIf="t.bankSet === 'KBANK'"
+                                 style="width: 20px">
+                            <img src="assets/img/banks/scb.png" alt="" *ngIf="t.bankSet === 'SCB'"
+                                 style="width: 20px">
+                            <img src="assets/img/banks/bbl.png" alt="" *ngIf="t.bankSet === 'BBL'"
+                                 style="width: 20px">
+                            <img src="assets/img/banks/tmb.png" alt="" *ngIf="t.bankSet === 'TMB'"
+                                 style="width: 30px">
+                            <img src="assets/img/banks/bay.png" alt="" *ngIf="t.bankSet === 'BAY'"
+                                 style="width: 20px">
+                            <img src="assets/img/banks/gsb.png" alt="" *ngIf="t.bankSet === 'GSB'"
+                                 style="width: 20px">
+                            <img src="assets/img/banks/ktc.png" alt="" *ngIf="t.bankSet === 'KTB'"
+                                 style="width: 20px">
+                            <img src="assets/img/banks/tbank.png" alt="" *ngIf="t.bankSet === 'TBANK'"
+                                 style="width: 20px">
+                            <img src="assets/img/banks/other.png" alt="" *ngIf="t.bankSet === 'WALLET'"
+                                 style="width: 20px">
+                            <img src="assets/img/banks/wallet.png" alt="" *ngIf="t.bankSet === 'TRUEMONEY'"
+                                 style="width: 20px">
+                            <img src="assets/img/banks/kkp.png" alt="" *ngIf="t.bankSet === 'KKP'"
+                                 style="width: 20px">
+                            ({{t.accountSet}})
+                        </td>
+                        <td class="text-center align-middle">
+                            {{t.username}}
+                        </td>
+                        <!--<td class="text-right align-middle" style="background: red; color: #000">-->
+                            <!--{{t.previousDownlineGiven | number: '1.2-2'}}-->
+                        <!--</td>-->
+                        <td class="text-right align-middle" style="background: yellow; color: #000">
+                            {{t.value | number: '1.2-2'}}
+                        </td>
+                        <!--<td class="text-right align-middle" style="background: green; color: #000;">-->
+                            <!--{{t.currentDownlineGiven | number: '1.2-2'}}-->
+                        <!--</td>-->
+                        <td class="text-center align-middle">
+                            {{t.createDate | date:'dd/MM/yyyy'}}
+                            <br>
+                            {{t.createDate | date:'HH:mm:ss'}}
+                        </td>
+                        <td class="text-center align-middle">
+                            {{t.updateDate | date:'dd/MM/yyyy'}}
+                            <br>
+                            {{t.updateDate | date:'HH:mm:ss'}}
+                        </td>
+                        <td class="text-right align-middle">
+                             <span *ngIf="t.status === 'CREATE'"  class="badge-primary badge">
+                                    CREATE
+                            </span>
+                            <span *ngIf="t.status === 'APPROVE'"  class="badge-info badge">
+                                    APPROVE
+                            </span>
+                            <span *ngIf="t.status === 'PROCESS'"  class="badge badge-default">
+                                    PROCESS
+                            </span>
+                            <span *ngIf="t.status === 'SUCCESS'"  class="badge badge-success">
+                                    SUCCESS
+                            </span>
+                            <span *ngIf="t.status === 'FAIL'" class="badge badge-danger">
+                                    FAIL
+                            </span>
+                            <span *ngIf="t.status === 'REJECT'" class="badge badge-danger">
+                                    REJECT
+                            </span>
+                            <span *ngIf="t.status === 'MANUAL'" class="badge badge-success">
+                                    MANUAL
+                            </span>
+                            <span *ngIf="t.status === 'CANCEL'" class="badge badge-danger">
+                                    CANCEL
+                            </span>
+                        </td>
+                        <td class="text-right align-middle">
+                            <span *ngIf="!t.isFail"  class="badge badge-success">
+                                    ปกติ
+                            </span>
+                            <span *ngIf="t.isFail"  class="badge badge-danger">
+                                    ผิดพลาด
+                            </span>
+                        </td>
+                        <td class="text-center align-middle">
+                            {{t.actionBy ? t.actionBy : '-'}}
+                        </td>
+                        <td class="text-center align-middle">
+                            <button style="padding: 5px; width: 28px;" class="btn btn-primary" (click)="viewRemark(t.apiRemark)"><i class="fa fa-search"></i></button>
+                        </td>
+                        <td class="text-right align-middle">
+                             <span style="background: red; color: white; padding-left: 5px; padding-right: 5px;">
+                                <b>{{t.beforeTransfer | number: '1.2-2'}}</b>
+                            </span>
+                            <br>
+                            <br>
+                            <span style="background: green; color: white; padding-left: 5px; padding-right: 5px;">
+                                    <b>{{t.afterTransfer | number: '1.2-2'}}</b>
+                            </span>
+                        </td>
+                        <td class="text-center align-middle">
+                            <button style="padding: 5px; width: 28px;" class="btn btn-success" [disabled]="t.status !== 'CREATE'" (click)="approve(t._id)"><i class="glyphicon glyphicon-check"></i></button>
+                        </td>
+                        <td class="text-center align-middle">
+                            <button style="padding: 5px; width: 28px;" class="btn btn-warning" [disabled]="!t.isFail" (click)="reset(t._id)"><i class="glyphicon glyphicon-repeat"></i></button>
+                        </td>
+                        <td class="text-center align-middle">
+                            <button style="padding: 5px; width: 28px;" class="btn btn-default" [disabled]="!t.isFail" (click)="manual(t._id)"><i class="glyphicon glyphicon-ok"></i></button>
+                        </td>
+                        <td class="text-center align-middle">
+                            <button style="padding: 5px; width: 28px;" class="btn btn-danger" [disabled]="t.status !== 'CREATE' && t.status !== 'FAIL'" (click)="reject(t._id)"><i class="glyphicon glyphicon-ban-circle"></i></button>
+                        </td>
+                        <td class="text-center align-middle" *ngIf="setting.getPosition() === 'SUPER_ADMIN'">
+                            <button style="padding: 5px; width: 28px;" class="btn btn-danger" [disabled]="t.status !== 'CREATE' && t.status !== 'APPROVE'" (click)="cancel(t._id)"><i class="glyphicon glyphicon-remove-sign"></i></button>
+                        </td>
+                        <td class="text-center align-middle">
+                            <button style="padding: 5px; width: 28px;" class="btn btn-primary" (click)="viewSlop(t.slip)"><i class="fa fa-search"></i></button>
+                        </td>
+                    </tr>
+                    </tbody>
+
+                </table>
+
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="input-group pull-right">
+                            <pagination-controls id="page" (pageChange)="pageChange($event)" maxSize="9"
+                                                 previousLabel="Previous"
+                                                 nextLabel="Next"></pagination-controls>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+</div>
+
+<div id="slipModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"
+     style="display: none;">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h4 class="modal-title">สลิป</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-sm-12 col-md-12 col-lg-12">
+                        <img src="{{slip}}" alt="" style="width: 100%;">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>

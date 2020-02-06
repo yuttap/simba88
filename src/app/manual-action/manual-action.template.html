@@ -1,0 +1,295 @@
+<h2 class="page-title">
+    เพิ่ม/ลด เครดิต
+</h2>
+<div class="row">
+    <article class="col-sm-12 col-md-12 col-lg-12">
+        <div class="row">
+            <div class="col-sm-12 col-md-12 col-lg-12">
+                <section widget class="widget">
+                    <header>
+                        <h5>ฟอร์ม</h5>
+                    </header>
+                    <div class="widget-body">
+                        <form id="manual-form" class="smart-form" novalidate="novalidate">
+                            <fieldset>
+                                <div class="row">
+                                    <section class="col col-2">
+                                        <div class="col-md-12">
+                                            <div class="abc-radio">
+                                                <input type="radio" name="manual" id="add" value="MANUALDEPOSIT" [(ngModel)]="formManual.type">
+                                                <label for="add">
+                                                     <span class="badge" style="background: green; font-size: 15px">
+                                                           เพิ่มเครดิต
+                                                        </span>
+                                                </label>
+                                            </div>
+                                            <div class="abc-radio">
+                                                <input type="radio" name="manual" id="cut" value="MANUALWITHDRAW" [(ngModel)]="formManual.type">
+                                                <label for="cut">
+                                                   <span class="badge" style="background: red; font-size: 15px">
+                                                           ลดเครดิต
+                                                        </span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </section>
+                                    <section class="col col-2">
+                                        <div class="input-group input-group-transparent">
+                                            <span class="input-group-addon"><i class="fa fa-user"></i></span>
+                                            <input id="username-input" class="form-control input-transparent"
+                                                   [ngModelOptions]="{standalone: true}" [(ngModel)]="formManual.username" type="text"
+                                                   placeholder="Username">
+                                        </div>
+                                    </section>
+                                    <section class="col col-2">
+                                        <div class="input-group input-group-transparent">
+                                            <span class="input-group-addon"><i class="fa fa-dollar"></i></span>
+                                            <input id="value-input" class="form-control input-transparent" style="text-align: right;"
+                                                   [ngModelOptions]="{standalone: true}" [(ngModel)]="formManual.value" type="number"
+                                                   placeholder="Value">
+                                        </div>
+                                    </section>
+                                    <section class="col">
+                                        <div class="input-group input-group-transpararent">
+                                            <span style="width: 75px;">รับโปรโมชั่น &nbsp;</span>
+                                            <select name="promotionName" [(ngModel)]="formManual.promotionName">
+                                                <option value="other">อื่นๆ</option>
+                                                <ng-container *ngFor="let pm of proData" >
+                                                    <option *ngIf="pm.active == true" value="{{pm.promotionName}}">{{pm.promotionName}}</option>
+                                                </ng-container>
+                                            </select>
+                                        </div>
+                                    </section>
+                                    <section class="col col-2">
+                                        <input id="remark-input"  class="form-control input-transparent"
+                                               [ngModelOptions]="{standalone: true}" [(ngModel)]="formManual.remark" type="text"
+                                               placeholder="Remark">
+                                    </section>
+                                    <section class="col">
+                                        <a style="padding: 5px" class="btn btn-primary" (click)="submit()">ทำรายการ</a>
+                                        <a style="padding: 5px" class="btn btn-default" (click)="clear()">ล้างข้อมูล</a>
+                                    </section>
+                                </div>
+                            </fieldset>
+                        </form>
+                    </div>
+                </section>
+
+            </div>
+        </div>
+
+
+
+
+        <div class="row">
+            <div class="col-sm-12 col-md-12 col-lg-12">
+                <section widget class="widget">
+                    <header>
+                        <h5>ค้นหา</h5>
+                    </header>
+                    <div class="widget-body">
+                        <form id="order-form" class="smart-form" novalidate="novalidate">
+                            <fieldset>
+                                <div class="row">
+                                    <section class="col col-2">
+                                        <label class="input">
+                                            <datetime class="form-line" [timepicker]="false" [datepicker]="datepickerOpts"
+                                                      [(ngModel)]="startDate" name="startDate" id="startDate"></datetime>
+                                        </label>
+                                    </section>
+                                    <section class="col col-2">
+                                        <label class="input">
+                                            <datetime class="form-line" [timepicker]="false" [datepicker]="datepickerOpts"
+                                                      [(ngModel)]="endDate" name="endDate" id="endDate"></datetime>
+                                        </label>
+                                    </section>
+                                    <section class="col col-4">
+                                        <div class="abc-radio">
+                                           <div class="row">
+
+                                               <div class="col col-6">
+                                                   <div class="col-md-12" >
+                                                       <div class="abc-radio" style="padding:0;">
+                                                           <input type="radio" name="radio3" id="radio3" value="ALL" checked [(ngModel)]="typeSearch">
+                                                           <label for="radio3">
+                                                        <span class="badge" style="background: grey; font-size: 15px">
+                                                           ทั้งหมด
+                                                        </span>
+                                                           </label>
+                                                       </div>
+                                                       <div class="abc-radio" style="padding:0;">
+                                                           <input type="radio" name="radio1" id="radio1" value="MANUALDEPOSIT" checked [(ngModel)]="typeSearch">
+                                                           <label for="radio1">
+                                                        <span class="badge" style="background: green; font-size: 15px">
+                                                           เพิ่มเครดิต
+                                                        </span>
+                                                           </label>
+                                                       </div>
+                                                       <div class="abc-radio" style="padding:0;">
+                                                           <input type="radio" name="radio1" id="radio2" value="MANUALWITHDRAW" [(ngModel)]="typeSearch">
+                                                           <label for="radio2">
+                                                        <span class="badge" style="background: red; font-size: 15px">
+                                                           ลดเครดิต
+                                                        </span>
+                                                           </label>
+                                                       </div>
+                                                   </div>
+                                               </div>
+                                               <div class="col col-6">
+                                                   <div class="row" >
+                                                   <span>Agent &nbsp;</span>
+                                                       <select id="agentType" name="agentType" [(ngModel)]="agentType" style="width: 70%">
+                                                           <option value="0" selected="selected">All</option>
+                                                           <option value="{{ag.index}}" *ngFor="let ag of agType">{{ag.agent}}</option>
+                                                       </select>
+                                                   </div>
+                                               </div>
+                                           </div>
+                                        </div>
+                                    </section>
+                                    <section class="col col-2">
+                                        <div class="input-group input-group-transparent">
+                                            <span class="input-group-addon"><i class="fa fa-user"></i></span>
+                                            <input id="prepended-input" class="form-control input-transparent"
+                                                   [ngModelOptions]="{standalone: true}" [(ngModel)]="userSearch" type="text"
+                                                   placeholder="Username">
+                                        </div>
+                                    </section>
+                                    <section class="col col-2">
+                                        <a style="padding: 5px" class="btn btn-primary" (click)="onLoad()">ค้นหา</a>
+                                        <a style="padding: 5px" class="btn btn-warning" (click)="yesterday()">เมื่อวาน</a>
+                                        <a style="padding: 5px" class="btn btn-success" (click)="today()">วันนี้</a>
+                                    </section>
+                                </div>
+                            </fieldset>
+                        </form>
+                    </div>
+                </section>
+
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-6 col-md-6 col-lg-6">
+                <section widget class="widget">
+                    <div class="widget-body">
+
+                        <table class="table table-striped static-table">
+                            <thead style="background: slategray">
+                            <tr>
+                                <th class="text-center">#</th>
+                                <th class="text-center">โปรโมชั่น</th>
+                                <th class="text-center">รับโปรโมชั่น/ Trans.</th>
+                                <th class="text-center">ยอดเงิน</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr *ngIf="proDetail.length === 0">
+                                <td class="text-center align-middle" colspan="4">
+                                    ยังไม่มีการรับโปรโมชั่น
+                                </td>
+                            </tr>
+                            <tr *ngFor="let pm of proDetail; let i=index">
+                                <td class="text-center">
+                                    {{i+1}}
+                                </td>
+                                <td class="text-center">
+                                    <span *ngIf="pm.name != null">{{pm.name}}</span>
+                                    <span *ngIf="pm.name == null">ไม่รับโปรโมชั่น</span>
+                                </td>
+                                <td class="text-center">
+                                    {{pm.count}}
+                                </td>
+                                <td class="text-center">
+                                    {{pm.amount}}
+                                </td>
+                            </tr>
+                            </tbody>
+
+                        </table>
+                    </div>
+                </section>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-12 col-md-12 col-lg-12">
+                <section widget class="widget">
+                    <header>
+                        <h5>รายละเอียด</h5>
+                    </header>
+                    <div class="widget-body">
+
+                        <table class="table table-striped static-table">
+                            <thead style="background: slategray">
+                            <tr>
+                                <th class="text-center">#</th>
+                                <th class="text-center">ประเภท</th>
+                                <th class="text-center">ยูสเซอร์</th>
+                                <th class="text-center">เครดิตก่อนเติม</th>
+                                <th class="text-center">จำนนวนเงิน</th>
+                                <th class="text-center">เครดิตหลังเติม</th>
+                                <th class="text-center">วันที่</th>
+                                <th class="text-center">ทำโดย</th>
+                                <th class="text-center">หมายเหตุ</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr *ngIf="result.length === 0">
+                                <td class="text-center align-middle" colspan="8">
+                                    ยังไม่มีการถอนเงิน
+                                </td>
+                            </tr>
+                            <tr *ngFor="let t of result | paginate: paginationConfig; let i = index">
+                                <td class="text-center align-middle">
+                                    {{t.transactionId}}
+                                </td>
+                                <td class="text-center align-middle">
+                                     <span class="badge" style="background: green; font-size: 15px;"  *ngIf="t.type === 'MANUALDEPOSIT'">
+                                                           เพิ่มเครดิต
+                                                        </span>
+                                    <span class="badge" style="background: red; font-size: 15px;" *ngIf="t.type === 'MANUALWITHDRAW'">
+                                       ลดเครดิต
+                                    </span>
+                                </td>
+                                <td class="text-center align-middle">
+                                    {{t.username}}
+                                </td>
+                                <td class="text-right align-middle" style="background: red; color: #000">
+                                    {{t.previousAmount | number: '1.2-2'}}
+                                </td>
+                                <td class="text-right align-middle" style="background: yellow; color: #000">
+                                    {{t.value | number: '1.2-2'}}
+                                </td>
+                                <td class="text-right align-middle" style="background: green; color: #000;">
+                                    {{t.currentAmount | number: '1.2-2'}}
+                                </td>
+                                <td class="text-center align-middle">
+                                    {{t.createDate | date:'dd/MM/yyyy'}}
+                                    <br>
+                                    {{t.createDate | date:'HH:mm:ss'}}
+                                </td>
+                                <td class="text-center align-middle">
+                                    {{t.actionBy}}
+                                </td>
+                                <td class="text-center align-middle">
+                                    {{t.remark}}
+                                </td>
+                            </tr>
+                            </tbody>
+
+                        </table>
+
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <div class="input-group pull-right">
+                                    <pagination-controls id="page" (pageChange)="pageChange($event)" maxSize="9"
+                                                         previousLabel="Previous"
+                                                         nextLabel="Next"></pagination-controls>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </article>
+</div>

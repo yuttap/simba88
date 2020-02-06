@@ -1,0 +1,66 @@
+<h2 class="page-title">
+    จัดการโปรโมชั่น
+</h2>
+<form>
+<div class="row">
+    <div class="col-sm-8 col-md-8 col-lg-8">
+        <section widget class="widget">
+            <div class="widget-body">
+                <div class="form-group row">
+                    <label class="col-form-label col-md-4">ชื่อโปรโมชั่น
+                        <span class="required">*</span>
+                    </label>
+                    <div class="col-md-4">
+                        <input type="text" name="promotionName" style="width: 100%" [(ngModel)]="promotionName" />
+                    </div>
+                    <button type="submit" class="btn btn-primary" (click)="onSubmit()">{{textstate}}</button>
+                    <button type="submit" class="btn btn-primary" (click)="onCancel()" *ngIf="cancel == true">ยกเลิก</button>
+                </div>
+            </div>
+        </section>
+
+    </div>
+</div>
+<div class="row">
+    <div class="col-sm-8 col-md-8 col-lg-8">
+        <section widget class="widget">
+            <div class="widget-body">
+                <table class="table table-striped static-table">
+                    <thead>
+                    <tr>
+                        <th class="text-center">#</th>
+                        <th class="text-center">โปรโมชั่น</th>
+                        <th class="text-center">สถานะ</th>
+                        <th class="text-center">แก้ไข</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr *ngIf="result.length === 0">
+                        <td class="text-center align-middle" colspan="10">
+                            ไม่มีข้อมูล
+                        </td>
+                    </tr>
+                    <tr *ngFor="let p of result; let i=index">
+                        <td class="text-center align-middle">
+                            {{i+1}}
+                        </td>
+                        <td class="text-center">
+                            {{p.promotionName}}
+                        </td>
+                        <td class="text-center">
+                            <span *ngIf="p.active == true">ใช้งาน</span>
+                            <span *ngIf="p.active == false">ไม่ใช้งาน</span>
+                        </td>
+                        <td class="text-center">
+                            <a (click)="onEdit(p)"><i _ngcontent-c1="" class="fa fa-edit"></i></a>&nbsp;&nbsp;&nbsp;
+                            <a (click)="onDelete(p)"><i _ngcontent-c7="" class="fa fa-close"></i></a>
+                        </td>
+                    </tr>
+                    </tbody>
+
+                </table>
+            </div>
+        </section>
+    </div>
+</div>
+</form>

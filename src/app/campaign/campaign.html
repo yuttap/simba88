@@ -1,0 +1,196 @@
+<div class="row">
+    <div class="col-md-8">
+        <h2>CAMPAIGN POINT</h2>
+    </div>
+</div>
+<div class="row">
+    <div class="col-sm-12 col-md-12 col-lg-12 text-right" style="padding-bottom: 10px;" *ngIf="this.setting.getPosition() !== 'SECURITY'">
+        <button type="button" class="btn btn-inverse" tooltip="Edit" (click)="openModal('ADD', null)">
+            <i class="glyphicon glyphicon-plus-sign"></i> สร้างใหม่
+        </button>
+    </div>
+    <div class="col-sm-12 col-md-12 col-lg-12">
+        <section widget class="widget">
+            <div class="widget-body">
+                <table class="table table-striped static-table">
+                    <thead>
+                    <tr>
+                        <th class="text-center">#</th>
+                        <th class="text-center">CAMPAIGN POINT</th>
+                        <th class="text-center">ประเภท</th>
+                        <th class="text-center">เงื่อนไขยอดการฝาก / บาท</th>
+                        <th class="text-center">Point ที่ได้รับ</th>
+                        <th class="text-center">Point สูงสุด</th>
+                        <th class="text-center">ช่วงเวลารับ Point ( 0 - 24 )</th>
+                        <th class="text-center">สถานะ</th>
+                        <th class="text-center" *ngIf="this.setting.getPosition() !== 'SECURITY'">แก้ไข</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr *ngIf="campaigns.length === 0">
+                        <td class="text-center align-middle" colspan="9">
+                            ไม่มีข้อมูล
+                        </td>
+                    </tr>
+                    <tr *ngFor="let cm of campaigns; let i = index">
+                        <td class="text-center align-middle">
+                            {{i+1}}
+                        </td>
+                        <td class="text-center align-middle">
+                            {{cm.campaignName}}
+                        </td>
+                        <td class="text-right align-middle" style="padding-right: 80px">
+                            {{cm.type}} / {{cm.typeBonus}}
+                        </td>
+                        <td class="text-right align-middle" style="padding-right: 80px">
+                            <div *ngFor="let con of cm.condition;">
+                                {{con.key1}} - {{con.key2}}
+                            </div>
+                        </td>
+                        <td class="text-center align-middle">
+                            <div *ngFor="let cond of cm.condition;">
+                                {{cond.bonus}}
+                            </div>
+                        </td>
+                        <td class="text-center align-middle">
+                            {{cm.maxBonus}}
+                        </td>
+                        <td class="text-center align-middle">
+                            {{cm.startTime}} - {{cm.endTime}}
+                        </td>
+                        <td class="text-center align-middle">
+                            <span *ngIf="cm.active" class="badge badge-success" title="Active">Active</span>
+                            <span *ngIf="!cm.active" class="badge badge-danger" title="Active">InActive</span>
+                        </td>
+                        <td class="text-center">
+                            <button type="button" class="btn btn-inverse" tooltip="Edit" (click)="openModal('EDIT', cm._id)">
+                                <i class="glyphicon glyphicon-pencil"></i>
+                            </button>
+                        </td>
+                    </tr>
+                    </tbody>
+
+                </table>
+            </div>
+        </section>
+    </div>
+</div>
+
+<div id="campaignModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"
+     style="display: none;">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content model-customer-detail">
+
+            <div class="modal-header">
+                <h4 class="modal-title" style="color: white;">Campaign Point</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            </div>
+            <div class="modal-body">
+                <section widget class="widget">
+                    <div class="row">
+                        <div class="col-sm-12 col-md-12 col-lg-12 main-header">
+                            <form #formCondition="ngForm" class="form-horizontal form-label-left" (submit)="onSubmit(formCondition.value)">
+                                <fieldset>
+                                    <legend class="section">CAMPAIGN POINT INFO</legend>
+                                    <div class="form-group row">
+                                        <label class="col-form-label col-md-4" for="campaignName">ชื่อ campaign point
+                                            <span class="required">*</span>
+                                        </label>
+
+                                        <div class="col-md-4">
+                                            <input type="text" [(ngModel)]="campaignName" name="campaignName" id="campaignName" required="required" class="form-control input-transparent">
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-form-label col-md-4">ประเภท campaign point
+                                            <span class="required">*</span>
+                                        </label>
+
+                                        <div class="col-md-6">
+                                            <select [(ngModel)]="type" [ngModelOptions]="{standalone: true}" name="type" style="width: 45%" (change)="customeUI()">
+                                                <option value="">เลือก</option>
+                                                <option value="TIER">TIER</option>
+                                                <option value="BONUS_TIME">BONUS_TIME</option>
+                                            </select>&nbsp;&nbsp;
+                                            <select [(ngModel)]="typeBonus" [ngModelOptions]="{standalone: true}" name="typeBonus" style="width: 30%">
+                                                <option value="">เลือก</option>
+                                                <option value="PERCENT">PERCENT</option>
+                                                <option value="FIX">FIX</option>
+                                            </select>
+                                            &nbsp;&nbsp;&nbsp;
+                                            <button style="display: none" id="addCondition" type="button" class="btn btn-inverse" tooltip="Edit" (click)="addCondition()"><i class="glyphicon glyphicon-plus-sign"></i> เพิ่ม</button>
+                                        </div>
+                                    </div>
+                                    <div id="customCondition" style="display: none" class="form-group row">
+                                        <label class="col-form-label col-md-4">เงื่อนไขยอดการฝาก
+                                            <span class="required">*</span>
+                                        </label>
+
+                                        <div id="block-condition" class="col-md-8" style="padding-left: 30px">
+                                            <div class="row customui" ngModelGroup="condition" *ngFor="let cc of condition; let i = index">
+                                                <ng-container ngModelGroup="{{i}}">
+                                                <input type="text" name="key1" ngModel [(ngModel)]="condition[i].key1" [ngModelOptions]="{standalone: true}" required="required" class="form-control input-transparent">
+                                                &nbsp;&nbsp;ถึง&nbsp;&nbsp;
+                                                <input type="text" name="key2" ngModel [(ngModel)]="condition[i].key2" [ngModelOptions]="{standalone: true}" required="required" class="form-control input-transparent">
+                                                &nbsp;&nbsp;&nbsp;&nbsp;รับโบนัส&nbsp;&nbsp;
+                                                <input type="text" name="bonus" ngModel [(ngModel)]="condition[i].bonus" [ngModelOptions]="{standalone: true}" required="required" class="form-control input-transparent">
+                                                &nbsp;&nbsp;&nbsp;&nbsp;
+                                                <button type="button" class="close" (click)="removeCondition($event, i)">×</button>
+                                                </ng-container>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-form-label col-md-4" for="maxBonus">Point สูงสุด
+                                            <span class="required">*</span>
+                                        </label>
+
+                                        <div class="col-md-4">
+                                            <input type="text" [(ngModel)]="maxBonus" name="maxBonus" id="maxBonus" class="form-control input-transparent">
+                                        </div>
+                                    </div>
+                                    <div id="customTime" style="display: none" class="form-group row">
+                                        <label class="col-form-label col-md-4" for="startTime">ช่วงเวลา 0 - 24
+                                            <span class="required">*</span>
+                                        </label>
+
+                                        <div class="col-md-4">
+                                            <input type="text" [(ngModel)]="startTime" name="startTime" id="startTime" style="width: 20%; display: inline" class="form-control input-transparent">
+                                            &nbsp;&nbsp;ถึง&nbsp;&nbsp;
+                                            <input type="text" [(ngModel)]="endTime" name="endTime" style="width: 20%; display: inline" class="form-control input-transparent">
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-form-label col-md-4">Active
+
+                                        </label>
+
+                                        <div class="col-md-4">
+                                            <div class="checkbox" style="padding-left: 0">
+                                                <label>
+                                                    <input type="checkbox" class="checkbox" [(ngModel)]="active" name="active" >
+                                                    <span></span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </fieldset>
+                                <div class="form-actions">
+                                    <div class="row justify-content-md-center">
+                                        <div class="col-md-8 text-center">
+                                            <button type="submit" class="btn btn-primary">ทำรายการ</button>
+                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">ปิด</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>

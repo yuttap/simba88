@@ -1,0 +1,37 @@
+@import "../../../node_modules/nvd3/build/nv.d3";
+@import "../scss/variables";
+@import "../../../node_modules/bootstrap/scss/functions";
+@import "../../../node_modules/bootstrap/scss/_variables";
+@import "../../../node_modules/bootstrap/scss/mixins";
+@import "../../../node_modules/ng2-datetime/src/vendor/bootstrap-datepicker/bootstrap-datepicker3.min";
+@import "../../../node_modules/ng2-datetime/src/vendor/bootstrap-timepicker/bootstrap-timepicker.min";
+
+#datetimepicker, #date-of-birth {
+  .input-group {
+    width: 100%;
+    display: flex !important;
+    .input-group-addon {
+      padding: .375rem .75rem .375rem .75rem;
+    }
+  }
+}
+
+
+.main-header{
+  background: rgba(0, 0, 0, 0.3);
+
+  .main{
+    background: rgba(0, 0, 0, 0.7);
+    font-size: 2rem !important;
+    font-weight: bold;
+  }
+
+  .sub{
+    padding-bottom: 10px;
+    padding-top: 10px;
+  }
+}
+
+hr{
+  border: 2px dashed white;
+}

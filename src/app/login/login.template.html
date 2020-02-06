@@ -1,0 +1,59 @@
+<div class="single-widget-container">
+    <section widget class="widget login-widget">
+        <header class="text-center">
+            <h4>Login to your account</h4>
+        </header>
+        <div class="widget-body">
+            <form class="no-margin" [formGroup]="loginForm" (ngSubmit)="submitForm($event,loginForm.value)">
+                <p *ngIf="inValid" class="has-error" style="color: red;">{{errorMsg}}</p>
+                <fieldset class="login-form">
+                    <div class="form-group">
+                        <label for="username">Username</label>
+                        <div class="input-group input-group-lg input-group-transparent">
+              <span class="input-group-addon">
+                <i class="fa fa-user"></i>
+              </span>
+                            <input id="username" name="username" type="text"
+                                   class="form-control input-lg input-transparent"
+                                   placeholder="Your Username" [formControl]="loginForm.controls['username']">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Password</label>
+
+                        <div class="input-group input-group-lg input-group-transparent">
+              <span class="input-group-addon">
+                <i class="fa fa-lock"></i>
+              </span>
+                            <input id="password" name="password" type="password"
+                                   class="form-control input-lg input-transparent"
+                                   placeholder="Your Password" [formControl]="loginForm.controls['password']">
+                        </div>
+                    </div>
+                    <div class="form-group" *ngIf="isTwoFactory">
+                        <label for="password">รหัสยืนยันตัวตน</label>
+
+                        <div class="input-group input-group-lg input-group-transparent">
+              <span class="input-group-addon">
+                <i class="fa fa-lock"></i>
+              </span>
+                            <input id="twoFactory" name="twoFactory" type="text"
+                                   class="form-control input-lg input-transparent"
+                                   placeholder="รหัสยันยินตัวตน" [formControl]="loginForm.controls['otp']">
+                        </div>
+                    </div>
+                </fieldset>
+                <div class="form-actions" style="padding-bottom: 20px;">
+                    <button type="submit" class="btn btn-lg btn-block btn-danger">
+                        <small>Sign In</small>
+                    </button>
+                </div>
+            </form>
+        </div>
+        <!--<footer>-->
+        <!--<div class="facebook-login">-->
+        <!--<a routerLink="/app/dashboard"><span><i class="fa fa-facebook-square fa-lg"></i> LogIn with Facebook</span></a>-->
+        <!--</div>-->
+        <!--</footer>-->
+    </section>
+</div>

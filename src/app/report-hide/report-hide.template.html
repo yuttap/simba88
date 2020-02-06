@@ -1,0 +1,220 @@
+<h2 class="page-title">
+    รายงานที่ถูกซ่อน
+</h2>
+<div class="row">
+    <article class="col-sm-7 col-md-7 col-lg-7">
+        <div class="row">
+            <div class="col-sm-12 col-md-12 col-lg-12">
+                <section widget class="widget">
+                    <header>
+                        <h5>ค้นหา</h5>
+                    </header>
+                    <div class="widget-body">
+                        <form id="order-form" class="smart-form" novalidate="novalidate">
+                            <fieldset>
+                                <div class="row">
+                                    <section class="col col-4">
+                                        <label class="input">
+                                            <datetime class="form-line" [timepicker]="false" [datepicker]="datepickerOpts"
+                                                      [(ngModel)]="startDate" name="startDate" id="startDate"></datetime>
+                                        </label>
+                                    </section>
+                                    <section class="col col-4">
+                                        <label class="input">
+                                            <datetime class="form-line" [timepicker]="false" [datepicker]="datepickerOpts"
+                                                      [(ngModel)]="endDate" name="endDate" id="endDate"></datetime>
+                                        </label>
+                                    </section>
+                                    <section class="col col-3">
+                                        <a style="padding: 5px" class="btn btn-primary" (click)="onLoad()">ค้นหา</a>
+                                        <a style="padding: 5px" class="btn btn-warning" (click)="yesterday()">เมื่อวาน</a>
+                                        <a style="padding: 5px" class="btn btn-success" (click)="today()">วันนี้</a>
+                                    </section>
+                                </div>
+                            </fieldset>
+                        </form>
+                    </div>
+                </section>
+
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-sm-12 col-md-12 col-lg-12 main-header">
+                <div class="row">
+                    <div class="col-lg-12 main">
+                        <header>
+                            รายการ
+                        </header>
+                    </div>
+                </div>
+
+                <div class="row sub" style="padding: 10px;">
+                    <table class="table table-striped" *ngFor="let i of result">
+                        <tbody>
+                        <tr style="color: #fff; border: solid 5px #c1c1c1; height: 70px; background-color: #00a950;"
+                            *ngIf="i.bankName == 'KBANK'">
+                            <td style="width: 55px;">
+                                <img src="assets/img/banks/kbank.png" width="35px">
+                            </td>
+                            <td style="width: 430px;">{{i.detail}} {{i.typeTransfer}} {{i.accountTransfer}}
+                                <br>
+                                <small><i class="fa fa-clock-o"></i> รับรายการมาแล้ว {{i.lminute}} นาที
+                                </small>
+                                <br>
+                                <b>{{i.username}}</b>
+                                <br>
+                                <b style="color: red;">{{i.remark}}</b>
+                            </td>
+                            <td>
+                                <small>ช่องทาง</small>
+                                <br/> {{i.channelTransfer}}
+                            </td>
+                            <td>
+                                <small>เวลา</small>
+                                <br/> {{i.dateBank}}
+                            </td>
+                            <td>
+                                <small>จำนวนเงิน</small>
+                                <br/>
+                                <span class="badge-default badge" style="color: #000;">{{i.value | number: '1.2-2'}}</span>
+                            </td>
+                            <td class="text-right">
+                                <button class="btn btn-default btn-sm" (click)="revert(i._id)"><i class="glyphicon glyphicon-repeat"></i> นำกลับ</button>
+                            </td>
+                        </tr>
+                        <tr style="color: #fff; border: solid 5px #c1c1c1; height: 70px; background-color: #ff9d19;"
+                            *ngIf="i.bankName == 'TRUEMONEY'">
+                            <td style="width: 55px;">
+                                <img src="assets/img/banks/wallet.png" width="35px">
+                            </td>
+                            <td style="width: 430px;">{{i.detail}} {{i.typeTransfer}} {{i.accountTransfer}}
+                                <br>
+                                <small><i class="fa fa-clock-o"></i> รับรายการมาแล้ว {{i.lminute}} นาที
+                                </small>
+                                <br>
+                               <b>{{i.username}}</b>
+                                <br>
+                                <b style="color: red;">{{i.remark}}</b>
+                            </td>
+                            <td>
+                                <small>ช่องทาง</small>
+                                <br/> {{i.channelTransfer}}
+                            </td>
+                            <td>
+                                <small>เวลา</small>
+                                <br/> {{i.dateBank}}
+                            </td>
+                            <td>
+                                <small>จำนวนเงิน</small>
+                                <br/>
+                                <span class="badge-default badge" style="color: #000;">{{i.value | number: '1.2-2'}}</span>
+                            </td>
+                            <td class="text-right">
+                                <button class="btn btn-default btn-sm" (click)="revert(i._id)"><i class="glyphicon glyphicon-repeat"></i> นำกลับ</button>
+                            </td>
+                        </tr>
+                        <tr style="color: #fff; border: solid 5px #c1c1c1; height: 70px; background-color: #08088A;"
+                            *ngIf="i.bankName == 'BBL'">
+                            <td style="width: 55px;">
+                                <img src="assets/img/banks/bbl.png" width="35px">
+                            </td>
+                            <td style="width: 430px;">{{i.detail}} {{i.typeTransfer}}
+                                <br>
+                                <small><i class="fa fa-clock-o"></i> รับรายการมาแล้ว {{i.lminute}} นาที
+                                </small>
+                                <br>
+                                <b>{{i.username}}</b>
+                                <br>
+                                <b style="color: red;">{{i.remark}}</b>
+                            </td>
+                            <td>
+                                <small>ช่องทาง</small>
+                                <br/> {{i.channelTransfer}}
+                            </td>
+                            <td>
+                                <small>เวลา</small>
+                                <br/> {{i.dateBank}}
+                            </td>
+                            <td>
+                                <small>จำนวนเงิน</small>
+                                <br/>
+                                <span class="badge-default badge" style="color: #000;">{{i.value | number: '1.2-2'}}</span>
+                            </td>
+                            <td class="text-right">
+                                <button class="btn btn-default btn-sm" (click)="openModal(i)"><i class="fa fa-check"></i> เติม</button>
+                                <div style="padding: 2px;"></div>
+                                <button class="btn btn-primary btn-sm" (click)="delete(i)"><i class="fa fa-times"></i> ซ่อน</button>
+                            </td>
+                        </tr>
+                        <tr style="color: #fff; border: solid 5px #c1c1c1; height: 70px; background-color: rgb(73, 41, 126);"
+                            *ngIf="i.bankName == 'SCB'">
+                            <td style="width: 55px;">
+                                <img src="assets/img/banks/scb.png" width="35px">
+                            </td>
+                            <td style="width: 430px;">{{i.detail}}
+                                <br>
+                                <small><i class="fa fa-clock-o"></i> รับรายการมาแล้ว {{i.lminute}} นาที
+                                </small>
+                                <br>
+                               <b>{{i.username}}</b>
+                                <br>
+                                <b style="color: red;">{{i.remark}}</b>
+                            </td>
+                            <td>
+                                <small>ช่องทาง</small>
+                                <br/> {{i.channelTransfer}}
+                            </td>
+                            <td>
+                                <small>เวลา</small>
+                                <br/> {{i.dateBank}}
+                            </td>
+                            <td>
+                                <small>จำนวนเงิน</small>
+                                <br/>
+                                <span class="badge-default badge" style="color: #000;">{{i.value | number: '1.2-2'}}</span>
+                            </td>
+                            <td class="text-right">
+                                <button class="btn btn-default btn-sm" (click)="revert(i._id)"><i class="glyphicon glyphicon-repeat"></i> นำกลับ</button>
+                            </td>
+
+                        </tr>
+                        <tr style="color: #fff; border: solid 5px #c1c1c1; height: 70px; background-color: rgb(205,200,81);"
+                            *ngIf="i.bankName == 'BAY'">
+                            <td style="width: 55px;">
+                                <img src="assets/img/banks/bay.png" width="35px">
+                            </td>
+                            <td style="width: 430px;">{{i.detail}}
+                                <br>
+                                <small><i class="fa fa-clock-o"></i> รับรายการมาแล้ว {{i.lminute}} นาที
+                                </small>
+                                <br>
+                                <b>{{i.username}}</b>
+                                <br>
+                                <b style="color: red;">{{i.remark}}</b>
+                            </td>
+                            <td>
+                                <small>ช่องทาง</small>
+                                <br/> {{i.channelTransfer}}
+                            </td>
+                            <td>
+                                <small>เวลา</small>
+                                <br/> {{i.dateBank}}
+                            </td>
+                            <td>
+                                <small>จำนวนเงิน</small>
+                                <br/>
+                                <span class="badge-default badge" style="color: #000;">{{i.value | number: '1.2-2'}}</span>
+                            </td>
+                            <td class="text-right">
+                                <button class="btn btn-default btn-sm" (click)="revert(i._id)"><i class="glyphicon glyphicon-repeat"></i> นำกลับ</button>
+                            </td>
+
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </article>
+</div>

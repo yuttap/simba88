@@ -1,0 +1,78 @@
+<ul id="side-nav" class="side-nav" *ngIf="position !== 'SECURITY' && position !== 'REGISTER_ONLY' && position !== 'J_14'">
+    <li [routerLinkActive]="['active']">
+        <a routerLink="home"><i class="fa fa-home"></i> <span class="name">1. หน้าหลัก </span></a>
+    </li>
+    <li [routerLinkActive]="['active']">
+        <a routerLink="register"><i class="fa fa-user"></i> <span class="name">2. สมัครสมาชิก </span></a>
+    </li>
+    <li [routerLinkActive]="['active']" *ngIf="position === 'SUPER_ADMIN' || position === 'J_ADMIN'">
+        <a routerLink="register-transfer"><i class="fa fa-user"></i> <span class="name">2.1 ย้ายสมาชิก </span></a>
+    </li>
+    <li [routerLinkActive]="['active']">
+        <a routerLink="withdraw"><i class="fa fa-money"></i> <span class="name">3. ถอนเงิน</span></a>
+    </li>
+    <li [routerLinkActive]="['active']">
+        <a routerLink="customer-report"><i class="fa fa-user"></i> <span class="name">4. รายงานสมาชิก</span></a>
+    </li>
+    <li [routerLinkActive]="['active']" *ngIf="position !== 'LOW_ADMIN'">
+        <a routerLink="deposit-report"><i class="fa fa-list-alt"></i> <span class="name">5. รายงานการฝาก</span></a>
+    </li>
+    <li [routerLinkActive]="['active']" *ngIf="position !== 'LOW_ADMIN'">
+        <a routerLink="withdraw-report"><i class="fa fa-list-alt"></i> <span class="name">6. รายงานการถอน</span></a>
+    </li>
+    <li [routerLinkActive]="['active']">
+        <a routerLink="manual-action"><i class="fa fa-list-alt"></i> <span class="name">7. เพิ่ม/ลด เครดิต</span></a>
+    </li>
+    <li [routerLinkActive]="['active']" *ngIf="position === 'SUPER_ADMIN' || position === 'J_ADMIN'">
+        <a routerLink="balance-report"><i class="fa fa-list-alt"></i> <span class="name">8. รายงานสรุปยอด</span></a>
+    </li>
+    <li [routerLinkActive]="['active']" *ngIf="position === 'SUPER_ADMIN' || position === 'J_ADMIN'">
+        <a routerLink="report-hide"><i class="fa fa-list-alt"></i> <span class="name">9. รายงานที่ถูกซ่อน</span></a>
+    </li>
+    <li [routerLinkActive]="['active']" *ngIf="position === 'SUPER_ADMIN'">
+        <a routerLink="employee"><i class="fa fa-user"></i> <span class="name">10. พนักงาน</span></a>
+    </li>
+    <li [routerLinkActive]="['active']" *ngIf="position === 'SUPER_ADMIN'">
+        <a routerLink="bank"><i class="fa fa-bank"></i> <span class="name">11. ธนาคาร</span></a>
+    </li>
+    <li [routerLinkActive]="['active']" *ngIf="position === 'SUPER_ADMIN'">
+        <a routerLink="account-report"><i class="fa fa-user"></i> <span class="name">12. รายงานตามสมาชิก</span></a>
+    </li>
+    <li [routerLinkActive]="['active']" *ngIf="position === 'SUPER_ADMIN'">
+        <a routerLink="promotion"><i class="fa fa-user"></i> <span class="name">13. จัดการโปรโมชั่น</span></a>
+    </li>
+    <li [routerLinkActive]="['active']" *ngIf="position === 'SUPER_ADMIN'">
+        <a routerLink="registbyagent"><i class="fa fa-user"></i> <span class="name">14. ลิงค์สมัครสมาชิก</span></a>
+    </li>
+    <li [routerLinkActive]="['active']" *ngIf="position === 'SUPER_ADMIN'">
+        <a routerLink="account-wl-report"><i class="fa fa-user"></i> <span class="name">15. ยอดได้เสียรายสมาชิก</span></a>
+    </li>
+    <li [routerLinkActive]="['active']" *ngIf="position === 'SUPER_ADMIN'">
+        <a routerLink="campaign"><i class="fa fa-user"></i> <span class="name">16. ตั้งค่า Point</span></a>
+    </li>
+    <li [routerLinkActive]="['active']" *ngIf="position === 'SUPER_ADMIN'">
+        <a routerLink="manual-point"><i class="fa fa-user"></i> <span class="name">17. เพิ่มลด Point</span></a>
+    </li>
+    <li [routerLinkActive]="['active']" *ngIf="position === 'SUPER_ADMIN'">
+        <a routerLink="point-report"><i class="fa fa-user"></i> <span class="name">18. รายงาน Point</span></a>
+    </li>
+
+</ul>
+
+<ul id="side-nav" class="side-nav" *ngIf="position === 'J_14'">
+    <li [routerLinkActive]="['active']" *ngIf="position === 'J_14'">
+        <a routerLink="agent-report"><i class="fa fa-user"></i> <span class="name">รายงานตามเอเย่น</span></a>
+    </li>
+</ul>
+
+<ul id="side-nav" class="side-nav" *ngIf="position === 'SECURITY'">
+    <li [routerLinkActive]="['active']">
+        <a routerLink="employee"><i class="fa fa-user"></i> <span class="name">พนักงาน</span></a>
+    </li>
+</ul>
+
+<ul id="side-nav" class="side-nav" *ngIf="position === 'REGISTER_ONLY'">
+    <li [routerLinkActive]="['active']">
+        <a routerLink="register"><i class="fa fa-user"></i> <span class="name">สมัครสมาชิก</span></a>
+    </li>
+</ul>
